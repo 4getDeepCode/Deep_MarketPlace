@@ -1,0 +1,31 @@
+// {
+//   "compilerOptions": {
+//     "target": "ES2020",
+//     "module": "commonjs",
+//     "checkJs": false,
+//     "moduleResolution": "node",
+//     "baseUrl": "./src", 
+//     "paths": {
+//       "*": ["*"]
+//     }
+//   },
+//   "include": ["src/**/*"]
+// }
+
+
+{
+  "compilerOptions": {
+    "module": "CommonJS",
+    "target": "ES6"
+  },
+  "exclude": ["node_modules"]
+}
+
+
+// {
+//   "compilerOptions": {
+//     "module": "CommonJS",
+//     "target": "ES6"
+//   },
+//   "include": ["src/**/*"]
+// }
