@@ -4,6 +4,7 @@ const AccountStatus = require("../domain/AccountStatus")
 
 
 const sellerSchema = new mongoose.Schema({
+    
     sellerName: {
         type: String,
         required: true
@@ -70,7 +71,7 @@ const sellerSchema = new mongoose.Schema({
         type: String,
         required: true,
         trim: true,
-      match: /^[0-9A-Z]{15}$/,
+        match: /^[0-9A-Z]{15}$/,
     },
 
     role: {
@@ -98,7 +99,7 @@ const sellerSchema = new mongoose.Schema({
 
     }
 
-},{
+}, {
     timestamps: true
 });
 

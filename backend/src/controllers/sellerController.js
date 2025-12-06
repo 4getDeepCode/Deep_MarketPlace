@@ -1,6 +1,9 @@
+const UserRoles = require("../domain/UserRoll");
 const SellerError = require("../exceptions/SellerError");
 const Seller = require("../models/Seller");
+const VerificationCode = require("../models/VerificationCode");
 const SellerService = require("../services/SellerService");
+const jwtProvider = require("../utils/jwtProvider");
 
 
 class SellerController {
@@ -49,6 +52,29 @@ class SellerController {
         }
     }
 
+    async getSellerById(req, res) {
+        try {
+            const seller = await SellerService.getSellerById(req.params.id);
+            res.status(200).json(seller);
+        } catch (err) {
+            res
+                .status(err instanceof SellerError ? 404 : 500)
+                .json({ message: err.message });
+        }
+    }
+
+    async verifyEmail(req, res) {
+        try {
+            const { email, otp } = req.body;
+            const seller = await SellerService.verifyEmail(email, otp);
+            res.status(200).json(seller);
+        } catch (err) {
+            res
+                .status(err instanceof SellerError ? 404 : 500)
+                .json({ message: err.message });
+        }
+    }
+
 
     async updateSeller(req, res) {
         try {
@@ -93,9 +119,24 @@ class SellerController {
     async verifyLoginOtp(req, res) {
         try {
             const { otp, email } = req.body;
-
             const seller = await Seller.findOne({ email });
 
+            if (!seller) {
+                throw new SellerError("Invalid username...");
+            }
+
+            const verificationCode = await VerificationCode.findOne({ email });
+
+            if (!verificationCode || verificationCode.otp !== otp) {
+                throw new Error("Wrong OTP...");
+            }
+            const token = jwtProvider.createJwt({ email });
+
+            const authResponse = {
+                message: "Login Success",
+                jwt: token,
+                role: UserRoles.SELLER,
+            };
 
             return res.status(200).json(authResponse);
         } catch (err) {

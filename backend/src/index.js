@@ -1,20 +1,36 @@
 require("dotenv").config();
 const express = require("express");
 const connectDB = require("./config/db");
+const bodyParser = require("body-parser");
 
 const app = express();
 
-// Middleware (optional, for JSON parsing)
+
 app.use(express.json());
 
-// Root Route
+
 app.get("/", (req, res) => {
     res.send({ message: "Hello All! Welcome To Deep Marketplace From Backend System 👋" });
 });
 
+app.use(bodyParser.json());
+
+
+const adminRoutes = require("./routers/adminRoutes")
+const sellerRoutes = require("./routers/sellerRoutes")
+const authRoutes = require("./routers/authRoutes")
+
+
+
+
+app.use('/auth', authRoutes);
+app.use("/sellers", sellerRoutes)
+app.use("/admin", adminRoutes)
+
+
+
 const PORT = process.env.PORT || 5000;
 
-// Start Server
 app.listen(PORT, async () => {
     console.log(`🚀 Server running on port ${PORT}`);
     await connectDB();
