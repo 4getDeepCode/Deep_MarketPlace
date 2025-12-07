@@ -19,6 +19,7 @@ app.use(bodyParser.json());
 const adminRoutes = require("./routers/adminRoutes")
 const sellerRoutes = require("./routers/sellerRoutes")
 const authRoutes = require("./routers/authRoutes")
+const userRoutes = require("./routers/userRoutes")
 
 
 
@@ -26,6 +27,8 @@ const authRoutes = require("./routers/authRoutes")
 app.use('/auth', authRoutes);
 app.use("/sellers", sellerRoutes)
 app.use("/admin", adminRoutes)
+app.use("/api/users",userRoutes)
+
 
 
 

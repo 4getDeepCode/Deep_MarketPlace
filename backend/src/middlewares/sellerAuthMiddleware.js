@@ -1,33 +1,46 @@
-const jwt = require("jsonwebtoken");
-const UserService = require("../services/UserService");
-const jwtProvider = require("../utils/jwtProvider");
 
-const authMiddleware = async (req, res, next) => {
+const Seller = require("../models/Seller.js");
+const jwtProvider = require("../utils/jwtProvider.js");
+
+
+const sellerAuthMiddleware = async (req, res, next) => {
   try {
-    const authHeader = req.header("Authorization");
-    if (!authHeader) {
+  
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
       return res
         .status(401)
-        .json({ message: "Authorization header is missing" });
+        .json({ message: "Authorization header is missing or invalid" });
     }
 
     const token = authHeader.split(" ")[1];
     if (!token) {
-      return res.status(401).json({ message: "jwt token is missing" });
+      return res.status(401).json({ message: "JWT Token is missing" });
     }
 
-    const user = await UserService.findUserProfileByJwt(token)
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
+    let email;
+    try {
+      email = jwtProvider.getEmailFromJwt(token);
+    } catch (error) {
+      return res.status(401).json({ message: "Invalid or expired token" });
     }
 
-    req.user = user;
+    
+    const seller = await Seller.findOne({ email });
+    if (!seller) {
+      return res
+        .status(404)
+        .json({ message: "Seller not found with email " + email });
+    }
+
+    req.seller = seller;
 
     next();
   } catch (error) {
-    console.error("Error in authentication middleware: ", error.message);
-    return res.status(500).json({ message: error.message });
+    return res
+      .status(500)
+      .json({ message: "Internal server error", error: error.message });
   }
 };
 
-module.exports = authMiddleware;
+module.exports = sellerAuthMiddleware;

@@ -1,7 +1,11 @@
+const UserError = require("../exceptions/UsserError");
+const Cart = require("../models/Cart");
 const User = require("../models/User");
 const VerificationCode = require("../models/VerificationCode");
 const generateOTP = require("../utils/generateOtp");
+const jwtProvider = require("../utils/jwtProvider");
 const { sendVerificationEmail } = require("../utils/sendEmail");
+const bcrypt = require('bcrypt');
 
 
 class AuthService{
@@ -32,6 +36,63 @@ class AuthService{
         await sendVerificationEmail(email, subject, text);
     }
 
+
+     async createUser(req) {
+        const { email, fullName, otp } = req;
+
+        const verificationCode = await VerificationCode.findOne({ email });
+
+        if (!verificationCode || verificationCode.otp !== otp) {
+            throw new Error("Wrong OTP...");
+        }
+
+        let user = await User.findOne({ email });
+
+        if (!user) {
+            user = new User({
+                email,
+                fullName,
+                role: 'ROLE_CUSTOMER', 
+                mobile: "9083476123", 
+                password: await bcrypt.hash(otp, 10) 
+            });
+
+            await user.save();
+
+            const cart = new Cart({ user: user._id });
+            await cart.save();
+        }
+
+        const token = jwtProvider.createJwt({email})
+
+        return token;
+    }
+
+    async signin(req) {
+        const { email, otp } = req;
+
+        const user = await User.findOne({ email });
+
+        console.log("user : ",user)
+
+        if (!user) {
+            throw new UserError("Invalid username or password");
+        }
+
+        const verificationCode = await VerificationCode.findOne({ email });
+
+        if (!verificationCode || verificationCode.otp !== otp) {
+            throw new Error("Wrong OTP...");
+        }
+
+        const token = jwtProvider.createJwt({email})
+
+        return {
+            message: "Login Success",
+            jwt: token,
+            role: user.role
+        };
+    }
 
 
 }
