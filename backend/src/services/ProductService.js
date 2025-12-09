@@ -4,7 +4,6 @@ const Category = require("../models/Category");
 const Product = require("../models/Product");
 
 
-
 const calculateDiscountPercentage = (mrpPrice, sellingPrice) => {
     if (mrpPrice <= 0) {
         throw new Error("MRP must be greater than zero");
