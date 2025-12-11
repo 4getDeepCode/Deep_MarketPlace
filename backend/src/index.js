@@ -23,18 +23,20 @@ const userRoutes = require("./routers/userRoutes")
 const sellerProductRoutes = require("./routers/sellerProductRoutes")
 const productRoutes = require("./routers/productRoutes")
 const cartRoutes = require("./routers/cartRoutes")
-
+const orderRoutes = require("./routers/orderRoutes")
+const sellerOrderRoutes = require("./routers/sellerOrderRoutes")
 
 
 
 app.use('/auth', authRoutes);
 app.use("/sellers", sellerRoutes)
 app.use("/admin", adminRoutes)
-app.use("/api/users",userRoutes)
+app.use("/api/users", userRoutes)
 app.use("/products", productRoutes)
 app.use("/api/sellers/products", sellerProductRoutes)
-app.use("/api/cart",cartRoutes)
-
+app.use("/api/cart", cartRoutes)
+app.use("/api/orders", orderRoutes)
+app.use("/api/seller/orders", sellerOrderRoutes)
 
 
 
