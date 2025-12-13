@@ -25,6 +25,9 @@ const productRoutes = require("./routers/productRoutes")
 const cartRoutes = require("./routers/cartRoutes")
 const orderRoutes = require("./routers/orderRoutes")
 const sellerOrderRoutes = require("./routers/sellerOrderRoutes")
+const paymentRoutes = require("./routers/paymentRoutes")
+const transactionRoutes = require("./routers/transactionRoutes")
+const sellerReports = require("./routers/sellerReportRoutes")
 
 
 
@@ -37,6 +40,10 @@ app.use("/api/sellers/products", sellerProductRoutes)
 app.use("/api/cart", cartRoutes)
 app.use("/api/orders", orderRoutes)
 app.use("/api/seller/orders", sellerOrderRoutes)
+app.use("/api/payment", paymentRoutes)
+app.use("/api/transactions", transactionRoutes)
+app.use("/api/sellers/report", sellerReports)
+
 
 
 

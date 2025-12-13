@@ -1,5 +1,8 @@
+const PaymentMethod = require("../domain/PaymentMethod");
+const PaymentOrder = require("../models/PaymentOrder");
 const CartService = require("../services/CartService");
 const OrderService = require("../services/OrderService");
+const PaymentService = require("../services/PaymentService");
 
 
 
@@ -19,8 +22,28 @@ class OrderController {
             const orders = await OrderService.createOrder(user, shippingAddress, cart);
 
 
+            const paymentOrder = await PaymentService.createOrder(user, orders);
+            const response = {};
+            console.log("rresponse ", response, paymentMethod, "--", PaymentMethod.RAZORPAY, "--", paymentMethod === PaymentMethod.RAZORPAY)
 
-            return res.status(200).json(orders);
+            if (paymentMethod === PaymentMethod.RAZORPAY) {
+                const payment = await PaymentService.createRazorpayPaymentLink(user, paymentOrder.amount, paymentOrder._id);
+                const paymentUrl = payment.short_url;
+                const paymentUrlId = payment.id;
+
+                response.payment_link_url = paymentUrl;
+
+                paymentOrder.paymentLinkId = paymentUrlId;
+                await PaymentOrder.findByIdAndUpdate(paymentOrder._id, paymentOrder)
+                console.log('payment -- ', payment)
+
+            } else if (paymentMethod === PaymentMethod.STRIPE) {
+                const paymentUrl = await PaymentService.createStripePaymentLink(user, paymentOrder.amount, paymentOrder._id);
+                response.payment_link_url = paymentUrl;
+            }
+
+
+            return res.status(200).json(response);
 
         } catch (error) {
             console.log("error ", error)
@@ -52,7 +75,7 @@ class OrderController {
     }
 
     async getUserOrderHistory(req, res) {
-       
+
         try {
             const userId = await req.user._id;
             const orderHistory = await OrderService.usersOrderHistory(userId);
