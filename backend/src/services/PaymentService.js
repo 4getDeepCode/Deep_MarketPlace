@@ -39,32 +39,86 @@ class PaymentService {
         return paymentOrder;
     }
 
-    async proceedPaymentOrder(paymentOrder, paymentId, paymentLinkId) {
+    // async proceedPaymentOrder(paymentOrder, paymentId, paymentLinkId) {
 
-        if (paymentOrder.status === PaymentOrderStatus.PENDING) {
+    //     if (paymentOrder.status === PaymentOrderStatus.PENDING) {
+    //         const payment = await razorpay.payments.fetch(paymentId);
+
+
+    //         if (payment.status === 'captured') {
+    //             await Promise.all(paymentOrder.orders.map(async (orderId) => {
+    //                 const order = await Order.findById(orderId);
+    //                 order.paymentStatus = PaymentStatus.COMPLETED;
+    //                 order.orderStatus = OrderStatus.PLACED;
+    //                 await order.save();
+    //             }));
+
+    //             paymentOrder.status = PaymentOrderStatus.SUCCESS;
+
+    //             await paymentOrder.save();
+
+    //             return true;
+    //         } else {
+    //             paymentOrder.status = PaymentOrderStatus.FAILED;
+    //             await paymentOrder.save();
+    //             return false;
+    //         }
+    //     }
+    //     return false;
+    // }
+
+    async proceedPaymentOrder(paymentOrder, paymentId, paymentLinkId) {
+        try {
+            if (paymentOrder.status !== PaymentOrderStatus.PENDING) {
+                return false;
+            }
+
             const payment = await razorpay.payments.fetch(paymentId);
 
+            
+            if (
+                payment.order_id !== paymentOrder.razorpayOrderId &&
+                payment.payment_link_id !== paymentLinkId
+            ) {
+                throw new Error('Payment does not belong to this order');
+            }
+
             if (payment.status === 'captured') {
-                await Promise.all(paymentOrder.orders.map(async (orderId) => {
-                    const order = await Order.findById(orderId);
-                    order.paymentStatus = PaymentStatus.COMPLETED;
-                    order.orderStatus = OrderStatus.PLACED;
-                    await order.save();
-                }));
+                await Promise.all(
+                    paymentOrder.orders.map(async (orderId) => {
+                        const order = await Order.findById(orderId);
+
+                        if (!order) {
+                            throw new Error(`Order not found: ${orderId}`);
+                        }
+
+                        order.paymentStatus = PaymentStatus.COMPLETED;
+                        order.orderStatus = OrderStatus.PLACED;
+                        await order.save();
+                    })
+                );
 
                 paymentOrder.status = PaymentOrderStatus.SUCCESS;
-
                 await paymentOrder.save();
 
                 return true;
-            } else {
-                paymentOrder.status = PaymentOrderStatus.FAILED;
-                await paymentOrder.save();
-                return false;
             }
+
+           
+            paymentOrder.status = PaymentOrderStatus.FAILED;
+            await paymentOrder.save();
+            return false;
+
+        } catch (error) {
+            console.error('Payment processing error:', error);
+
+            paymentOrder.status = PaymentOrderStatus.FAILED;
+            await paymentOrder.save();
+
+            return false;
         }
-        return false;
     }
+
 
     async createRazorpayPaymentLink(user, amount, orderId) {
 
@@ -93,7 +147,7 @@ class PaymentService {
         }
     }
 
-     async createStripePaymentLink(user, amount, orderId) {
+    async createStripePaymentLink(user, amount, orderId) {
         try {
             const session = await stripe.checkout.sessions.create({
                 payment_method_types: ['card'],

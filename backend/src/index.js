@@ -28,10 +28,13 @@ const sellerOrderRoutes = require("./routers/sellerOrderRoutes")
 const paymentRoutes = require("./routers/paymentRoutes")
 const transactionRoutes = require("./routers/transactionRoutes")
 const sellerReports = require("./routers/sellerReportRoutes")
+const dealRoutes=require("./routers/dealRoutes")
+const homeRoutes=require("./routers/homeCategoryRoutes")
+const couponRoutes=require("./routers/couponRoutes")
 
 
 
-app.use('/auth', authRoutes);
+app.use("/auth", authRoutes);
 app.use("/sellers", sellerRoutes)
 app.use("/admin", adminRoutes)
 app.use("/api/users", userRoutes)
@@ -40,9 +43,14 @@ app.use("/api/sellers/products", sellerProductRoutes)
 app.use("/api/cart", cartRoutes)
 app.use("/api/orders", orderRoutes)
 app.use("/api/seller/orders", sellerOrderRoutes)
+
 app.use("/api/payment", paymentRoutes)
 app.use("/api/transactions", transactionRoutes)
 app.use("/api/sellers/report", sellerReports)
+
+app.use("/admin/deals",dealRoutes)
+app.use("/home",homeRoutes)
+app.use("/api/coupons",couponRoutes)
 
 
 
