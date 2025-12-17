@@ -28,9 +28,11 @@ const sellerOrderRoutes = require("./routers/sellerOrderRoutes")
 const paymentRoutes = require("./routers/paymentRoutes")
 const transactionRoutes = require("./routers/transactionRoutes")
 const sellerReports = require("./routers/sellerReportRoutes")
-const dealRoutes=require("./routers/dealRoutes")
-const homeRoutes=require("./routers/homeCategoryRoutes")
-const couponRoutes=require("./routers/couponRoutes")
+const dealRoutes = require("./routers/dealRoutes")
+const homeRoutes = require("./routers/homeCategoryRoutes")
+const couponRoutes = require("./routers/couponRoutes")
+const reviewRoutes = require("./routers/reviewRoutes")
+const wishlistRoutes=require("./routers/wishlistRoutes")
 
 
 
@@ -48,10 +50,11 @@ app.use("/api/payment", paymentRoutes)
 app.use("/api/transactions", transactionRoutes)
 app.use("/api/sellers/report", sellerReports)
 
-app.use("/admin/deals",dealRoutes)
-app.use("/home",homeRoutes)
-app.use("/api/coupons",couponRoutes)
-
+app.use("/admin/deals", dealRoutes)
+app.use("/home", homeRoutes)
+app.use("/api/coupons", couponRoutes)
+app.use("/api/reviews", reviewRoutes)
+app.use("/api/wishlist", wishlistRoutes)
 
 
 
