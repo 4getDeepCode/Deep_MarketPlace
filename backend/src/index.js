@@ -33,6 +33,7 @@ const homeRoutes = require("./routers/homeCategoryRoutes")
 const couponRoutes = require("./routers/couponRoutes")
 const reviewRoutes = require("./routers/reviewRoutes")
 const wishlistRoutes=require("./routers/wishlistRoutes")
+const revenueRoutes=require("./routers/revenueRoutes")
 
 
 
@@ -55,6 +56,7 @@ app.use("/home", homeRoutes)
 app.use("/api/coupons", couponRoutes)
 app.use("/api/reviews", reviewRoutes)
 app.use("/api/wishlist", wishlistRoutes)
+app.use("/api/sellers/revenue",revenueRoutes)
 
 
 
