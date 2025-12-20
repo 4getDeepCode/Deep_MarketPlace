@@ -1,34 +1,43 @@
-
-const bcrypt = require('bcrypt');
-const User = require('../models/User');
+const bcrypt = require("bcrypt");
+const User = require("../models/User");
 
 class DataInitializationService {
   async initializeAdminUser() {
-    const adminEmail = 'codewithzosh@gmail.com';
-    const adminPassword = 'codewithzosh';
+ 
+    if (process.env.NODE_ENV === "production") {
+      console.log("Admin initialization skipped in production.");
+      return;
+    }
+
+    const { ADMIN_EMAIL, ADMIN_PASSWORD } = process.env;
+
+  
+    if (!ADMIN_EMAIL || !ADMIN_PASSWORD) {
+      throw new Error(
+        "ADMIN_EMAIL and ADMIN_PASSWORD must be set in environment variables"
+      );
+    }
 
     try {
-  
-      const adminExists = await User.findOne({ email: adminEmail });
-
-      if (!adminExists) {
-     
-        const hashedPassword = await bcrypt.hash(adminPassword, 10);
-
-        const adminUser = new User({
-          fullName: 'Zosh',
-          email: adminEmail,
-          password: hashedPassword,
-          role: 'ROLE_ADMIN',
-        });
-
-        await adminUser.save();
-        console.log('Admin user created successfully!');
-      } else {
-        console.log('Admin user already exists.');
+      const adminExists = await User.exists({ email: ADMIN_EMAIL });
+      if (adminExists) {
+        console.log("Admin user already exists.");
+        return;
       }
+
+      const hashedPassword = await bcrypt.hash(ADMIN_PASSWORD, 12);
+
+      await User.create({
+        fullName: "Admin",
+        email: ADMIN_EMAIL,
+        password: hashedPassword,
+        role: "ROLE_ADMIN",
+      });
+
+      console.log("Admin user created successfully.");
     } catch (error) {
-      console.error('Error during admin initialization:', error);
+      console.error("Admin initialization failed:", error.message);
+      throw error;
     }
   }
 }

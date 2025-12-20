@@ -34,7 +34,7 @@ const couponRoutes = require("./routers/couponRoutes")
 const reviewRoutes = require("./routers/reviewRoutes")
 const wishlistRoutes=require("./routers/wishlistRoutes")
 const revenueRoutes=require("./routers/revenueRoutes")
-
+const chatbotRouters=require("./routers/chatbotRoutes")
 
 
 app.use("/auth", authRoutes);
@@ -57,6 +57,7 @@ app.use("/api/coupons", couponRoutes)
 app.use("/api/reviews", reviewRoutes)
 app.use("/api/wishlist", wishlistRoutes)
 app.use("/api/sellers/revenue",revenueRoutes)
+app.use("/chat",chatbotRouters)
 
 
 
