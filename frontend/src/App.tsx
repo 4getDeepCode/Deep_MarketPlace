@@ -1,11 +1,15 @@
+import { Button, ThemeProvider } from "@mui/material"
+import customTheme from "./Theme/customTheme"
+import "@fontsource/poppins";
 
 
 function App() {
 
   return (
-   <>
-   <h1>welcome to the DeepMarketPlace</h1>
-   </>
+   <ThemeProvider theme={customTheme}>
+    <Button variant="contained" color="primary">deepMarketPlace</Button>
+     <Button variant="contained" color="secondary">deepMarketPlace</Button>
+  </ThemeProvider>
   )
 }
 
