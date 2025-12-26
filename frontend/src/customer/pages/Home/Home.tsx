@@ -47,7 +47,7 @@ const Home = () => {
 
             <p className="text-base sm:text-lg lg:text-2xl text-gray-200">
               Grow your business with
-              <span className="logo pl-2 text-3xl text-white font-extrabold">
+              <span className=" pl-2 text-3xl text-white font-extrabold">
                 Deep MarketPlace
               </span>
             </p>
