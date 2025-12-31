@@ -8,7 +8,7 @@ const CartItemCard = () => {
       {/* CONTENT */}
       <div className="p-5 flex gap-4">
         <img
-          className="w-[100px] h-[130px] object-cover rounded-xl"
+          className=" `w-[100px]` `h-[130px]` object-cover rounded-xl"
           src="https://ik.imagekit.io/4sjmoqtje/tr:w-1000,c-at_max/cdn/shop/files/green-tissue-saree-with-bead-and-cutdana-embroidery-sg338770-6.jpg?v=1757674612"
           alt=""
         />

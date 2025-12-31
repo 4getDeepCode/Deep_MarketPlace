@@ -1,37 +1,37 @@
 import { createTheme } from "@mui/material/styles";
 
-const modernTheme = createTheme({
+const modernLightTheme = createTheme({
   palette: {
-    mode: "dark",
+    mode: "light",
 
     primary: {
-      main: "#22D3EE", // cyan accent
+      main: "#06B6D4", // cyan
     },
 
     secondary: {
-      main: "#8B5CF6", // violet
+      main: "#7C3AED", // violet
     },
 
     background: {
-      default: "#0F172A", // deep navy
-      paper: "#111827", // surface cards
+      default: "#F8FAFC", // soft light gray
+      paper: "#FFFFFF", // clean white cards
     },
 
     text: {
-      primary: "#E5E7EB",
-      secondary: "#9CA3AF",
+      primary: "#0F172A", // deep navy text
+      secondary: "#475569", // muted slate
     },
 
     success: {
-      main: "#22C55E",
+      main: "#16A34A",
     },
 
     warning: {
-      main: "#FBBF24",
+      main: "#F59E0B",
     },
 
     error: {
-      main: "#F43F5E",
+      main: "#E11D48",
     },
   },
 
@@ -61,7 +61,8 @@ const modernTheme = createTheme({
           padding: "10px 20px",
         },
         containedPrimary: {
-          background: "linear-gradient(135deg, #22D3EE 0%, #8B5CF6 100%)",
+          color: "#FFFFFF",
+          background: "linear-gradient(135deg, #06B6D4 0%, #7C3AED 100%)",
         },
       },
     },
@@ -70,7 +71,9 @@ const modernTheme = createTheme({
       styleOverrides: {
         root: {
           borderRadius: 16,
-          backgroundImage: "linear-gradient(180deg, #111827 0%, #0F172A 100%)",
+          backgroundImage: "linear-gradient(180deg, #FFFFFF 0%, #F1F5F9 100%)",
+          boxShadow:
+            "0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04)",
         },
       },
     },
@@ -85,4 +88,4 @@ const modernTheme = createTheme({
   },
 });
 
-export default modernTheme;
+export default modernLightTheme;
