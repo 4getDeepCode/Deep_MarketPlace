@@ -9,15 +9,17 @@ import Footer from "./customer/components/Footer/Footer";
 import ProductDetails from "./customer/pages/Products/ProductDetails/ProductDetails";
 import Cart from "./customer/pages/Cart/Cart";
 import AddressPage from "./customer/pages/Checkout/AddressPage";
+import Navbar from "./customer/components/Navbar/Navbar";
 
 function App() {
   return (
     <ThemeProvider theme={customTheme}>
-      {/* <Home /> */}
+      <Navbar/>
+      <Home />
       {/* <Products/> */}
       {/* <ProductDetails /> */}
       {/* <Cart /> */}
-      <AddressPage/>
+      {/* <AddressPage/> */}
       <Footer />
     </ThemeProvider>
   );

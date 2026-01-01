@@ -17,7 +17,7 @@ const DealCard = ({ deal }: any) => {
         </div>
       </div>
 
-      <div className=" bg-white p-1 text-center border-t transition-all duration-300 group-hover:bg-indigo-50 " >
+      <div className=" bg-white p-1 text-center border-t border-gray-300 transition-all duration-300 group-hover:bg-indigo-50 " >
 
         <p className="text-base font-semibold text-indigo-600 tracking-wide">
           Shop Now

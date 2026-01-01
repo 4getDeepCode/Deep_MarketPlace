@@ -57,8 +57,8 @@ const modernLightTheme = createTheme({
     MuiButton: {
       styleOverrides: {
         root: {
-          borderRadius: 12,
-          padding: "10px 20px",
+          borderRadius: 10,
+          padding: "6px 14px",
         },
         containedPrimary: {
           color: "#FFFFFF",
