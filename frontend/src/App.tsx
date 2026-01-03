@@ -10,12 +10,14 @@ import ProductDetails from "./customer/pages/Products/ProductDetails/ProductDeta
 import Cart from "./customer/pages/Cart/Cart";
 import AddressPage from "./customer/pages/Checkout/AddressPage";
 import Navbar from "./customer/components/Navbar/Navbar";
+import Profile from "./customer/pages/Account/Profile";
 
 function App() {
   return (
     <ThemeProvider theme={customTheme}>
-      <Navbar/>
-      <Home />
+      <Navbar />
+      <Profile />
+      {/* <Home /> */}
       {/* <Products/> */}
       {/* <ProductDetails /> */}
       {/* <Cart /> */}
