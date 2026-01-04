@@ -11,18 +11,25 @@ import Cart from "./customer/pages/Cart/Cart";
 import AddressPage from "./customer/pages/Checkout/AddressPage";
 import Navbar from "./customer/components/Navbar/Navbar";
 import Profile from "./customer/pages/Account/Profile";
+import { Route, Routes } from "react-router";
 
 function App() {
   return (
     <ThemeProvider theme={customTheme}>
       <Navbar />
-      <Profile />
-      {/* <Home /> */}
-      {/* <Products/> */}
-      {/* <ProductDetails /> */}
-      {/* <Cart /> */}
-      {/* <AddressPage/> */}
-      <Footer />
+     
+
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/products/:categoryId" element={<Products />} />
+        <Route path="/product-details" element={<ProductDetails/>}/>
+        <Route path="/cart" element={<Cart/>}/>
+        <Route path="/checkout/address" element={<AddressPage/>}/>
+        <Route path="/account/*" element={<Profile/>}/>
+        
+      </Routes>
+
+       <Footer />
     </ThemeProvider>
   );
 }

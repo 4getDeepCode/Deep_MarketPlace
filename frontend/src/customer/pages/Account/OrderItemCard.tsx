@@ -1,15 +1,18 @@
 import { ElectricBolt } from "@mui/icons-material";
 import { Avatar } from "@mui/material";
 import { teal } from "@mui/material/colors";
+import { useNavigate } from "react-router";
 
 
 
 
 
 const OrderItemCard = () => {
+  const navigate = useNavigate();
  
   return (
     <div
+    onClick={()=>navigate("account/orders/1/item/1")} 
       className="text-sm bg-white p-5 space-y-3 border border-gray-300 rounded-md cursor-pointer"
     >
       <div className="flex items-center gap-3">

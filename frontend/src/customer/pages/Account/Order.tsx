@@ -1,6 +1,8 @@
+import { useNavigate } from "react-router";
 import OrderItemCard from "./OrderItemCard";
 
 const Order = () => {
+  const navigate = useNavigate();
   return (
     <div className="text-sm min-h-screen">
       <div className="pb-5">

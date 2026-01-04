@@ -46,7 +46,7 @@ const Navbar = () => {
                 <Menu className="text-gray-700" sx={{ fontSize: 29 }} />
               </IconButton>
             )}
-            <h1 className="logo cursor-pointer text-lg md:text-2xl  text-[#00927c]">
+            <h1 onClick={() => navigate("/")} className="logo cursor-pointer text-lg md:text-2xl  text-[#00927c]">
               Deep
             </h1>
           </div>
@@ -77,7 +77,7 @@ const Navbar = () => {
           </IconButton>
 
          {false? <Button
-            onClick={() => navigate("/account/orders")}
+            onClick={() => navigate("/account")}
             className="flex items-center gap-2"
           >
             <Avatar
@@ -100,9 +100,10 @@ const Navbar = () => {
             <FavoriteBorder sx={{ fontSize: 29 }} className="text-gray-700" />
           </IconButton>
 
-          <IconButton>
+          <IconButton onClick={() => navigate("/cart")}>
             <Badge color="primary">
               <AddShoppingCart
+
                 sx={{ fontSize: 29 }}
                 className="text-gray-700"
               />
