@@ -1,5 +1,5 @@
 import { Divider } from "@mui/material"
-import ProfileFildCard from "../../../seller/pages/ProfileFildCard"
+import ProfileFildCard from "../../../seller/pages/Account/ProfileFildCard"
 
 
 const UserDetails = () => {

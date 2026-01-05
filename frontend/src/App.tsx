@@ -12,13 +12,18 @@ import AddressPage from "./customer/pages/Checkout/AddressPage";
 import Navbar from "./customer/components/Navbar/Navbar";
 import Profile from "./customer/pages/Account/Profile";
 import { Route, Routes } from "react-router";
+import SellerDashboard from "./seller/pages/SellerDashboard/SellerDashboard";
 
 function App() {
   return (
     <ThemeProvider theme={customTheme}>
-      <Navbar />
+      
      
+<Routes>
+ <Route path='/seller/*' element={<SellerDashboard />} />
+</Routes>
 
+{/* <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/products/:categoryId" element={<Products />} />
@@ -29,7 +34,7 @@ function App() {
         
       </Routes>
 
-       <Footer />
+       <Footer /> */}
     </ThemeProvider>
   );
 }
