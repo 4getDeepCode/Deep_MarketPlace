@@ -1,65 +1,78 @@
 
+
+import { Button, Divider, IconButton } from "@mui/material";
+import { deleteCartItem, updateCartItem } from "../../../Redux Toolkit/Customer/CartSlice";
+import { useAppDispatch } from "../../../Redux Toolkit/Store";
+import { CartItem } from "../../../types/cartTypes";
 import { Add, Close, Remove } from "@mui/icons-material";
-import { Divider, IconButton } from "@mui/material";
+import * as React from "react";
 
-const CartItemCard = () => {
-  return (
-    <div className="bg-white rounded-2xl shadow-sm relative overflow-hidden">
-      {/* CONTENT */}
-      <div className="p-5 flex gap-4">
-        <img
-          className=" `w-[100px]` `h-[130px]` object-cover rounded-xl"
-          src="https://ik.imagekit.io/4sjmoqtje/tr:w-1000,c-at_max/cdn/shop/files/green-tissue-saree-with-bead-and-cutdana-embroidery-sg338770-6.jpg?v=1757674612"
-          alt=""
-        />
+interface CartItemProps {
+    item:CartItem
+}
 
-        <div className="flex-1 space-y-1">
-          <h2 className="font-semibold text-lg">Deep Clothing</h2>
+const CartItemCard : React.FC<CartItemProps> = ({ item }) => {
+    const dispatch = useAppDispatch();
+    
+    const handleUpdateQuantity=(value:number)=>{
+        dispatch(updateCartItem({jwt:localStorage.getItem("jwt"),
+            cartItemId:item._id, cartItem:{quantity:item.quantity + value}}))
+    }
+    const handleRemoveCartItem=()=>{
+        dispatch(deleteCartItem({
+            jwt:localStorage.getItem("jwt") || "", 
+            cartItemId:item._id}))
+    }
+    return (
+        <div className=' border border-gray-300 rounded-md relative'>
+            <div className='p-5 flex gap-3'>
 
-          <p className="text-gray-600 text-sm">
-            Inclusive of all taxes · Free shipping above ₹1500
-          </p>
+                <div>
+                    <img className='w-[90px] rounded-md' 
+                    src={item.product.images[0]}
+                    // src="https://www.taneira.com/dw/image/v2/BKMH_PRD/on/demandware.static/-/Sites-Taneira-product-catalog/default/dw422bdf2e/images/Taneira/Catalog/BFW22CW0042_1.jpg?sw=1000&sh=1500"
+                     alt="" />
+                </div>
+                <div className='space-y-2'>
+                    <h1 className='font-semibold text-lg'>{item.product?.seller?.businessDetails?.businessName}</h1>
+                    <p className='text-gray-600 font-medium text-sm'>Turquoise Blue Stonework Satin Designer Saree</p>
+                    <p className='text-gray-400 text-xs'><strong>Sold by:</strong> Natural Lifestyle Products Private Limited</p>
+                    <p className='text-xs'><strong>7 days replacement</strong> available</p>
+                    <p className='text-sm text-gray-500'><strong>quantity : </strong> {item.quantity}</p>
+                </div>
 
-          <p className="text-gray-400 text-xs">
-            Sold by: Natural Lifestyle Products Pvt Ltd
-          </p>
+            </div>
+            <Divider />
+            <div className='px-5 py-2 flex justify-between items-center'>
 
-          <p className="text-xs font-medium text-emerald-600">
-            7 days replacement available
-          </p>
+                <div className=' flex items-center gap-2  w-[140px] justify-between'>
+
+                    <Button size='small' disabled={item.quantity == 1} onClick={() => handleUpdateQuantity(-1)} >
+                        <Remove />
+                    </Button>
+                    <span className='px-3  font-semibold'>
+                        {item.quantity}
+                    </span>
+                    <Button size='small' onClick={() => handleUpdateQuantity(1)} >
+                        <Add />
+                    </Button>
+
+                </div>
+                <div>
+                    <p className='text-gray-700 font-medium'>₹{item.sellingPrice}</p>
+                </div>
+
+
+            </div>
+            
+            <div className='absolute top-1 right-1'>
+                <IconButton onClick={handleRemoveCartItem} color='primary' >
+                    <Close />
+                </IconButton>
+            </div>
+
         </div>
-      </div>
+    )
+}
 
-      <Divider />
-
-      {/* FOOTER */}
-      <div className="px-5 py-3 flex justify-between items-center">
-        <div className="flex items-center gap-3 bg-gray-50 rounded-xl px-3 py-1">
-          <IconButton size="small" color="primary">
-            <Remove />
-          </IconButton>
-
-          <span className="font-semibold">2</span>
-
-          <IconButton size="small" color="primary">
-            <Add />
-          </IconButton>
-        </div>
-
-        <p className="font-semibold text-gray-900 text-lg">₹3999</p>
-      </div>
-      <div className="absolute top-1 right-1">
-        {/* REMOVE */}
-        <IconButton
-          size="small"
-          className="absolute top-2 right-2"
-          color="primary"
-        >
-          <Close />
-        </IconButton>
-      </div>
-    </div>
-  );
-};
-
-export default CartItemCard;
+export default CartItemCard

@@ -1,9 +1,8 @@
+import { useLocation, useNavigate } from "react-router";
+import { useAppDispatch } from "../../../Redux Toolkit/Store";
+import { performLogout } from "../../../Redux Toolkit/Customer/AuthSlice";
+import { Divider, ListItemIcon, ListItemText } from "@mui/material";
 import * as React from "react";
-import Divider from "@mui/material/Divider";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import { useLocation, useNavigate } from "react-router-dom";
-import "./DrawerList.css";
 
 export interface Menu {
   name: string;
@@ -19,10 +18,14 @@ interface DrawerListProps {
 }
 
 const DrawerList = ({ toggleDrawer, menu, menu2 }: DrawerListProps) => {
+  const dispatch = useAppDispatch();
+
   const location = useLocation();
   const navigate = useNavigate();
 
-  const handleLogout = () => {};
+  const handleLogout = () => {
+    dispatch(performLogout());
+  };
 
   const handleClick = (item: any) => () => {
     if (item.name === "Logout") {
@@ -40,22 +43,40 @@ const DrawerList = ({ toggleDrawer, menu, menu2 }: DrawerListProps) => {
               <div
                 key={item.name}
                 onClick={handleClick(item)}
-                className="pr-9 cursor-pointer"
+                className="pr-9 cursor-pointer   "
               >
-                <div
+                <p
                   className={`${
                     item.path === location.pathname
-                      ? "bg-[Cyan] text-white "
+                      ? "bg-primary-color text-gray-500 "
                       : "text-primary-color"
                   } flex items-center px-5 py-3 rounded-r-full`}
                 >
-                  <ListItemIcon>
+                  {/* <ListItemIcon>
                     {location.pathname === item.path
                       ? item.activeIcon
                       : item.icon}
+                  </ListItemIcon> */}
+
+                  <ListItemIcon sx={{ minWidth: "36px" }}>
+                    {React.cloneElement(
+                      location.pathname === item.path
+                        ? item.activeIcon
+                        : item.icon,
+                      {
+                        sx: {
+                          color:
+                            location.pathname === item.path
+                              ? "#6B7280" // gray-500
+                              : "#06B6D4",
+                          transition: "color 0.2s ease",
+                        },
+                      }
+                    )}
                   </ListItemIcon>
+
                   <ListItemText primary={item.name} />
-                </div>
+                </p>
               </div>
             ))}
           </div>
@@ -69,20 +90,37 @@ const DrawerList = ({ toggleDrawer, menu, menu2 }: DrawerListProps) => {
                 className="pr-9 cursor-pointer"
                 key={item.name}
               >
-                <div
+                <p
                   className={`${
                     item.path === location.pathname
-                      ? " bg-[Cyan] text-white "
+                      ? " bg-primary-color text-gray-500 "
                       : "text-primary-color"
                   } flex items-center px-5 py-3 rounded-r-full`}
                 >
-                  <ListItemIcon>
+                  {/* <ListItemIcon>
                     {location.pathname === item.path
                       ? item.activeIcon
                       : item.icon}
+                  </ListItemIcon> */}
+
+                  <ListItemIcon sx={{ minWidth: "36px" }}>
+                    {React.cloneElement(
+                      location.pathname === item.path
+                        ? item.activeIcon
+                        : item.icon,
+                      {
+                        sx: {
+                          color:
+                            location.pathname === item.path
+                              ? "#6B7280" // gray-500
+                              : "#06B6D4",
+                          transition: "color 0.2s ease",
+                        },
+                      }
+                    )}
                   </ListItemIcon>
                   <ListItemText primary={item.name} />
-                </div>
+                </p>
               </div>
             ))}
           </div>
@@ -93,5 +131,3 @@ const DrawerList = ({ toggleDrawer, menu, menu2 }: DrawerListProps) => {
 };
 
 export default DrawerList;
-
-

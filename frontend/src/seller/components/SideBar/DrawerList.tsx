@@ -1,4 +1,5 @@
 import {
+  AccountBalanceWallet,
   AccountBox,
   Add,
   Dashboard,
@@ -7,7 +8,7 @@ import {
   Receipt,
   ShoppingBag,
 } from "@mui/icons-material";
-import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
+// import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import DrawerList from "../../../admin seller/components/drawerList/DrawerList";
 const menu = [
   {
@@ -37,8 +38,8 @@ const menu = [
   {
     name: "Payment",
     path: "/seller/payment",
-    icon: <AccountBalanceWalletIcon className="text-primary-color" />,
-    activeIcon: <AccountBalanceWalletIcon className="text-white" />,
+    icon: <AccountBalanceWallet className="text-primary-color" />,
+    activeIcon: <AccountBalanceWallet className="text-white" />,
   },
   {
     name: "Transaction",
@@ -78,3 +79,4 @@ const SellerDrawerList = ({ toggleDrawer }: DrawerListProps) => {
 };
 
 export default SellerDrawerList;
+

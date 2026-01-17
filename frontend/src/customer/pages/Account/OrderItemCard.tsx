@@ -1,48 +1,58 @@
-import { ElectricBolt } from "@mui/icons-material";
-import { Avatar } from "@mui/material";
-import { teal } from "@mui/material/colors";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router"
+import { Order, OrderItem } from "../../../types/orderTypes"
+import { Avatar } from "@mui/material"
+import { ElectricBolt } from "@mui/icons-material"
+import { teal } from "@mui/material/colors"
+import { formatDate } from "../../util/fomateDate"
+import * as React from "react"
+
+interface OrderItemCardProps{
+    item:OrderItem,
+    order:Order
+}
+const OrderItemCard:React.FC<OrderItemCardProps> = ({item,order}) => {
+    
+    const navigate = useNavigate()
 
 
 
+    return (
+        <div onClick={() => navigate(`/account/orders/${order._id}/item/${item._id}`)} className='text-sm bg-white p-5 space-y-4 border rounded-md cursor-pointer'>
+
+            <div className='flex items-center gap-3'>
+                <div>
+                    <Avatar sizes='small' sx={{ bgcolor: teal[500] }}>
+                        <ElectricBolt />
+                    </Avatar>
+
+                </div>
+                <div>
+                    <h1 className='font-bold text-teal-600'>{order.orderStatus}
+                    </h1>
+                    <p>Arriving by {formatDate(order.deliverDate)}</p>
+                </div>
+            </div>
+            <div className='p-5 bg-teal-50 flex gap-3 '>
+                <div className=''>
+                    <img className='w-[70px]'
+                     src={item.product?.images[0]} alt="" />
+                </div>
+                <div className='w-full space-y-2'>
+                    <h1 className='font-bold'>{item.product?.seller?.businessDetails?.businessName}
+                    </h1>
+                    <p>
+                        {item.product.title}
+                    </p>
+                    <p><strong>size : </strong>
+                        FREE</p>
+
+                </div>
 
 
-const OrderItemCard = () => {
-  const navigate = useNavigate();
- 
-  return (
-    <div
-    onClick={()=>navigate("account/orders/1/item/1")} 
-      className="text-sm bg-white p-5 space-y-3 border border-gray-300 rounded-md cursor-pointer"
-    >
-      <div className="flex items-center gap-3">
-        <div>
-          <Avatar sizes="small" sx={{ bgcolor: teal[500] }}>
-            <ElectricBolt />
-          </Avatar>
+            </div>
+
         </div>
-        <div>
-          <h1 className="font-bold text-teal-600">pending</h1>
-          <p>Arriving by</p>
-        </div>
-      </div>
-      <div className="p-5 bg-teal-50 flex gap-3 ">
-        <div className="">
-          <img className="w-[70px]" src="https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcRnDaBUwtU0zb6OCu_C6C-NNOcT78nyilKkJxKrxSASTOBdmIUCJO0HhJ15P7hRjXxc2xyBaGJwpdpDZNUnTaWx6Ro9xj6RmWp6KNgWTsMi9KC5IPrntXor" alt="" />
-        </div>
-        <div className="w-full space-y-2">
-          <h1 className="font-bold">
-            Deep MarketPlace
-          </h1>
-          <p>C J Enterprise Women's Kanjivaram Silk Saree</p>
-          <p>
-            <strong>size : </strong>
-            FREE
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-};
+    )
+}
 
-export default OrderItemCard;
+export default OrderItemCard

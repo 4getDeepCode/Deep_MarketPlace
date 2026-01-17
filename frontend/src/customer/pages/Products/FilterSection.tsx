@@ -1,166 +1,188 @@
 import {
-    Button,
-    Divider,
-    FormControlLabel,   
-    Radio,
-    RadioGroup,
+  Button,
+  Divider,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  Radio,
+  RadioGroup,
 } from "@mui/material";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { colors } from "../../../data/Filter/color";
 import { price } from "../../../data/Filter/price";
 import { discount } from "../../../data/Filter/discount";
+import { teal } from "@mui/material/colors";
 
 const FilterSection = () => {
-    const [expandColor, setExpandColor] = useState(false);
-    const [searchParams, setSearchParams] = useSearchParams();
+  const [expendColor, setExpendColor] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const handleExpendColor = () => {
+    setExpendColor(!expendColor);
+  };
 
-    const getParam = (key) => searchParams.get(key) || "";
+  const updateFilterParams = (e: any) => {
+    const { value, name } = e.target;
+    if (value) {
+      searchParams.set(name, value);
+    } else {
+      searchParams.delete(name);
+    }
+    setSearchParams(searchParams);
+  };
 
-    const updateFilterParams = (name, value) => {
-        const params = new URLSearchParams(searchParams.toString());
+  const clearAllFilters = () => {
+    console.log("clearAllFilters", searchParams);
+    searchParams.forEach((value: any, key: any) => {
+      searchParams.delete(key);
+    });
+    setSearchParams(searchParams);
+  };
 
-        // allow toggle off
-        if (params.get(name) === value) {
-            params.delete(name);
-        } else {
-            params.set(name, value);
-        }
+  return (
+    <aside className="bg-white sticky top-20 h-full border-r border-gray-300">
+      {/* HEADER */}
+      <div className="flex items-center justify-between px-6 py-4 border-b border-gray-300">
+        <h2 className="text-base font-semibold text-gray-800">Filters</h2>
+        <Button
+          size="small"
+          onClick={clearAllFilters}
+          className="!text-teal-600"
+        >
+          Clear all
+        </Button>
+      </div>
 
-        setSearchParams(params);
-    };
+      <Divider />
 
-    const clearAllFilters = () => {
-        setSearchParams({});
-    };
+      <div className="px-6 py-6 space-y-8">
+        {/* COLOR */}
 
-    return (
-        <aside className="bg-white sticky top-20 h-full border-r">
+        <section>
+          <FormControl sx={{ zIndex: 0 }}>
+            <FormLabel
+              sx={{
+                fontSize: "16px",
+                fontWeight: "bold",
+                pb: "14px",
+                color: teal[600],
+              }}
+              className="text-sm font-semibold uppercase text-gray-700"
+              id="color"
+            >
+              Color
+            </FormLabel>
+            <RadioGroup
+              onChange={updateFilterParams}
+              aria-labelledby="color"
+              defaultValue=""
+              name="color"
+            >
+              {colors.slice(0, expendColor ? colors.length : 5).map((item) => (
+                <FormControlLabel
+                  sx={{ fontSize: "12px" }}
+                  key={item.name}
+                  value={item.name}
+                  control={<Radio size="small" />}
+                  label={
+                    <div className="flex items-center gap-3">
+                      <p>{item.name}</p>
+                      <span
+                        style={{ backgroundColor: item.hex }}
+                        className={` h-5 w-5 rounded-full ${
+                          item.name === "White" ? "border" : "border"
+                        }`}
+                      ></span>
+                    </div>
+                  }
+                />
+              ))}
+            </RadioGroup>
+          </FormControl>
 
-            {/* HEADER */}
-            <div className="flex items-center justify-between px-6 py-4 border-b">
-                <h2 className="text-base font-semibold text-gray-800">
-                    Filters
-                </h2>
-                <Button
-                    size="small"
-                    onClick={clearAllFilters}
-                    className="!text-teal-600"
-                >
-                    Clear all
-                </Button>
-            </div>
+          <div>
+            <button
+              onClick={handleExpendColor}
+              className="text-teal-600 cursor-pointer hover:text-teal-900 flex items-center"
+            >
+              {expendColor ? "hide" : `+ ${colors.length - 5} more`}
+            </button>
+          </div>
+        </section>
 
-            <div className="px-6 py-6 space-y-8">
+        <Divider />
 
-                {/* COLOR */}
-        
-                <section>
-                    <h3 className="text-sm font-semibold uppercase text-gray-700 ">
-                        Color
-                    </h3>
+        {/* PRICE */}
+        <section>
+          <FormControl>
+            <FormLabel
+              sx={{
+                fontSize: "16px",
+                fontWeight: "bold",
+                pb: "14px",
+                color: teal[600],
+              }}
+              className="text-sm font-semibold uppercase text-gray-700 mt-3"
+              id="price"
+            >
+              Price
+            </FormLabel>
+            <RadioGroup
+              name="price"
+              onChange={updateFilterParams}
+              aria-labelledby="price"
+              defaultValue=""
+            >
+              {price.map((item) => (
+                <FormControlLabel
+                  key={item.name}
+                  value={item.value}
+                  control={<Radio size="small" />}
+                  label={item.name}
+                />
+              ))}
+            </RadioGroup>
+          </FormControl>
+        </section>
 
-                    <RadioGroup
-                        key={getParam("color")}   // 🔑 forces rerender
-                        value={getParam("color")}
-                          name="radio-buttons-group"
-                    >
-                        {colors
-                            .slice(0, expandColor ? colors.length : 5)
-                            .map((item) => (
-                                <FormControlLabel
-                                    key={item.name}
-                                    value={item.name}
-                                    control={<Radio size="small" />}
-                                    onClick={() =>
-                                        updateFilterParams("color", item.name)
-                                    }
-                                    label={
-                                        <div className="flex items-center gap-3">
-                                            <span
-                                                className="h-4 w-4 rounded-full border"
-                                                style={{ backgroundColor: item.hex }}
-                                            />
-                                            <span className="text-sm">
-                                                {item.name}
-                                            </span>
-                                        </div>
-                                    }
-                                />
-                            ))}
-                    </RadioGroup>
+        <Divider />
 
-                    {colors.length > 5 && (
-                        <button
-                            onClick={() => setExpandColor(!expandColor)}
-                            className="text-sm text-teal-600 mt-2 cursor-pointer"
-                        >
-                            {expandColor
-                                ? "Show less"
-                                : `+ ${colors.length - 5} more`}
-                        </button>
-                    )}
-                </section>
+        {/* DISCOUNT */}
+        <section>
+          <FormControl>
+            <FormLabel
+              sx={{
+                fontSize: "16px",
+                fontWeight: "bold",
+                pb: "14px",
+                color: teal[600],
+              }}
+              className="text-sm font-semibold uppercase text-gray-700 mt-3"
+              id="brand"
+            >
+              Discount
+            </FormLabel>
+            <RadioGroup
+              name="discount"
+              onChange={updateFilterParams}
+              aria-labelledby="brand"
+              defaultValue=""
+            >
+              {discount.map((item) => (
+                <FormControlLabel
+                  key={item.name}
+                  value={item.value}
+                  control={<Radio size="small" />}
+                  label={item.name}
+                />
+              ))}
+            </RadioGroup>
+          </FormControl>
+        </section>
 
-                <Divider />
-
-                {/* PRICE */}
-                <section>
-                    <h3 className="text-sm font-semibold uppercase text-gray-700 mt-3">
-                        Price
-                    </h3>
-
-                    <RadioGroup
-                        name="price"
-                        onChange={updateFilterParams}
-                        aria-labelledby="price"
-                        defaultValue=""
-                        
-
-                    >
-                        {price
-                            .map((item) => (
-                                <FormControlLabel
-                                    key={item.name}
-                                    value={item.value}
-                                    control={<Radio size="small" />}
-                                    label={item.name}
-                                />
-                            ))}
-                    </RadioGroup>
-                </section>
-
-                <Divider />
-
-                {/* DISCOUNT */}
-                <section>
-                    <h3 className="text-sm font-semibold uppercase text-gray-700 mt-3">
-                        Discount
-                    </h3>
-
-                    <RadioGroup
-                        name="discount"
-                        onChange={updateFilterParams}
-                        aria-labelledby="brand"
-                        defaultValue=""
-
-                    >
-                        {discount.map((item) => (
-                            <FormControlLabel
-                                key={item.name}
-                                value={item.value}
-                                control={<Radio size="small" />}
-                                label={item.name}
-                            />
-                        ))}
-
-
-                    </RadioGroup>
-                </section>
-
-            </div>
-        </aside>
-    );
+      </div>
+    </aside>
+  );
 };
 
 export default FilterSection;

@@ -1,39 +1,42 @@
 import { Divider } from "@mui/material";
+import { useAppSelector } from "../../../Redux Toolkit/Store";
+import { sumCartItemMrpPrice, sumCartItemSellingPrice } from "../../../util/cartCalculator";
 
 
 const PricingCard = () => {
+  const { cart } = useAppSelector((store) => store);
   return (
-    <div className="text-sm">
-      <div className="p-5 space-y-3">
-        <div className="flex justify-between">
-          <span className="text-gray-600">Subtotal</span>
-          <span className="font-medium">₹99</span>
+    <div>
+      <div className="space-y-3 p-5">
+        <div className="flex justify-between items-center">
+          <span>Subtotal</span>
+          <span>₹ {cart.cart?.totalMrpPrice}</span>
         </div>
-
-        <div className="flex justify-between">
-          <span className="text-gray-600">Discount</span>
-          <span className="text-emerald-600 font-medium">−10%</span>
+        <div className="flex justify-between items-center">
+          <span>Discount</span>
+          <span>
+            ₹{" "}
+            {sumCartItemMrpPrice(cart.cart?.cartItems || []) -
+              sumCartItemSellingPrice(cart.cart?.cartItems || [])}
+          </span>
         </div>
-
-        <div className="flex justify-between">
-          <span className="text-gray-600">Shipping</span>
-          <span className="font-medium">₹79</span>
+        <div className="flex justify-between items-center">
+          <span>Shipping</span>
+          <span>₹ 79</span>
         </div>
-
-        <div className="flex justify-between">
-          <span className="text-gray-600">Platform Fee</span>
-          <span className="text-emerald-600 font-medium">Free</span>
+        <div className="flex justify-between items-center">
+          <span>plateform fee</span>
+          <span className="text-teal-600">Free</span>
         </div>
       </div>
-
       <Divider />
 
-      <div className="px-5 py-4 flex justify-between items-center text-lg font-bold">
+      <div className="font-medium px-5 py-2 flex justify-between items-center">
         <span>Total</span>
-        <span>₹39</span>
+        <span>₹ {cart.cart?.totalSellingPrice}</span>
       </div>
     </div>
   );
-};
+ };
 
 export default PricingCard;

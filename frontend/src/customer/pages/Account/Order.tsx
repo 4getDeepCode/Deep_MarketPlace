@@ -1,8 +1,15 @@
-import { useNavigate } from "react-router";
+import { useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "../../../Redux Toolkit/Store";
+import { fetchUserOrderHistory } from "../../../Redux Toolkit/Customer/OrderSlice";
 import OrderItemCard from "./OrderItemCard";
 
 const Order = () => {
-  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const { auth, orders } = useAppSelector((store) => store);
+
+  useEffect(() => {
+    dispatch(fetchUserOrderHistory(localStorage.getItem("jwt") || ""));
+  }, [auth.jwt]);
   return (
     <div className="text-sm min-h-screen">
       <div className="pb-5">
@@ -10,11 +17,11 @@ const Order = () => {
         <p>from anytime</p>
       </div>
       <div className="space-y-2">
-        {[1,1,1].map((item: any) =>
-        
-            <OrderItemCard key={item._id}   />
-          )
-        }
+        {orders?.orders?.map((order: any) =>
+          order?.orderItems.map((item: any) => (
+            <OrderItemCard key={item._id} item={item} order={order} />
+          ))
+        )}
       </div>
     </div>
   );

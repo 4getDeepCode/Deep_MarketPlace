@@ -1,3 +1,6 @@
+import * as React from "react";
+import { useAppDispatch, useAppSelector } from "../../../Redux Toolkit/Store";
+import { createOrder } from "../../../Redux Toolkit/Customer/OrderSlice";
 import {
   Box,
   Button,
@@ -6,11 +9,12 @@ import {
   Radio,
   RadioGroup,
 } from "@mui/material";
-import AddressCard from "./AddressCard";
 import { Add } from "@mui/icons-material";
-import React, { useState } from "react";
-import AddressForm from "./AddressForm";
 import PricingCard from "../Cart/PricingCard";
+import AddressForm from "./AddressForm";
+
+import { useState } from "react";
+import AddressCard from "./AddressCard";
 
 const style = {
   position: "absolute",
@@ -32,21 +36,37 @@ const paymentGatwayList = [
   },
   {
     value: "STRIPE",
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Stripe_Logo%2C_revised_2016.svg/1200px-Stripe_Logo%2C_revised_2016.svg.png",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Stripe_Logo%2C_revised_2016.svg/1280px-Stripe_Logo%2C_revised_2016.svg.png",
     label: "Stripe",
   },
 ];
-
 const AddressPage = () => {
-  const [open, setOpen] = React.useState(false);
+  const [value, setValue] = React.useState(0);
+  const dispatch = useAppDispatch();
+  const { user } = useAppSelector((store) => store);
   const [paymentGateway, setPaymentGateway] = useState(
     paymentGatwayList[0].value
   );
+
+  const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const [selectedAddress, setSelectedAddress] = useState(1);
-  const handleChange = (e) => setSelectedAddress(e.target.value);
+
+  const handleChange = (event: any) => {
+    console.log("-----", event.target.value);
+    setValue(event.target.value);
+  };
+
+  const handleCreateOrder = () => {
+    if (user.user?.addresses)
+      dispatch(
+        createOrder({
+          paymentGateway,
+          address: user.user?.addresses[value],
+          jwt: localStorage.getItem("jwt") || "",
+        })
+      );
+  };
 
   const handlePaymentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPaymentGateway((event.target as HTMLInputElement).value);
@@ -62,21 +82,20 @@ const AddressPage = () => {
               Add New Address
             </Button>
           </div>
-
           <div className="text-xs font-medium space-y-5">
             <p>Saved Addreses</p>
             <div className="space-y-3">
-              {[1, 2, 3].map((item: any, index: number) => (
+              {user.user?.addresses?.map((item: any, index: number) => (
                 <AddressCard
+                  key={item._id}
+                  item={item}
+                  selectedValue={value}
+                  value={index}
                   handleChange={handleChange}
-                  value={item}
-                  key={index}
-                  selectedValue={selectedAddress}
                 />
               ))}
             </div>
           </div>
-
           <div className="py-4 px-5 rounded-md border border-gray-300">
             <Button onClick={handleOpen} startIcon={<Add />}>
               Add New Address
@@ -94,13 +113,15 @@ const AddressPage = () => {
               row
               aria-labelledby="demo-row-radio-buttons-group-label"
               name="row-radio-buttons-group"
-              className="flex justify-between pr-0"
+              className="flex justify-between  pr-0"
               onChange={handlePaymentChange}
               value={paymentGateway}
             >
               {paymentGatwayList.map((item) => (
                 <FormControlLabel
-                  className={`border border-gray-300 w-[45%] flex justify-center rounded-md pr-2`}
+                  className={`border border-gray-300 w-[45%] flex justify-center rounded-md pr-2 ${
+                    paymentGateway === item.value ? "border-primary-color" : ""
+                  }`}
                   value={item.value}
                   control={<Radio />}
                   label={
@@ -121,13 +142,19 @@ const AddressPage = () => {
           <section className="border border-gray-300 rounded-md">
             <PricingCard />
             <div className="p-5">
-              <Button sx={{ py: "11px" }} variant="contained" fullWidth>
+              <Button
+                onClick={handleCreateOrder}
+                sx={{ py: "11px" }}
+                variant="contained"
+                fullWidth
+              >
                 Checkout
               </Button>
             </div>
           </section>
         </div>
       </div>
+
       <Modal
         open={open}
         onClose={handleClose}
@@ -135,7 +162,10 @@ const AddressPage = () => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <AddressForm handleClose={handleClose} />
+          <AddressForm
+            paymentGateway={paymentGateway}
+            handleClose={handleClose}
+          />
         </Box>
       </Modal>
     </div>

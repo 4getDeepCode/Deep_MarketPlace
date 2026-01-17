@@ -16,6 +16,8 @@ const categoryTwo: { [key: string]: any[] } = {
   home_furniture: furnitureLevelTwo,
 };
 
+
+
 const categoryThree: { [key: string]: any[] } = {
   men: menLevelThree,
   women: womenLevelThree,
@@ -35,6 +37,7 @@ const CategorySheet = ({
       return child.parentCategoryId == parentCategoryId;
     });
   };
+  
   const handleCategoryClick = (category: string) => {
     if (toggleDrawer) {
       toggleDrawer(false)();
@@ -56,7 +59,7 @@ const CategorySheet = ({
               index % 2 == 0 ? "bg-slate-50" : "bg-white"
             }`}
           >
-            <p className="text-[#00927c] mb-5 font-semibold">{item.name}</p>
+            <p className="text-[#1E90FF] mb-3 font-semibold">{item.name}</p>
 
             <ul className="space-y-1">
               {childCategory(
@@ -66,7 +69,7 @@ const CategorySheet = ({
                 <div key={item.name}>
                   <li
                     onClick={() => handleCategoryClick(item.categoryId)}
-                    className="hover:text-[#00927c] cursor-pointer"
+                    className="hover:text-[#1E90FF] cursor-pointer"
                   >
                     {item.name}
                   </li>
@@ -81,3 +84,4 @@ const CategorySheet = ({
 };
 
 export default CategorySheet;
+

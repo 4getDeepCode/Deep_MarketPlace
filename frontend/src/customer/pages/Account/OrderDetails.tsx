@@ -1,43 +1,104 @@
-import { Box, Button, Divider } from "@mui/material";
 
+
+import { useNavigate, useParams } from "react-router";
+import { useAppDispatch, useAppSelector } from "../../../Redux Toolkit/Store";
+import { useEffect } from "react";
+import { cancelOrder, fetchOrderById, fetchOrderItemById } from "../../../Redux Toolkit/Customer/OrderSlice";
+import { Box, Button, Divider } from "@mui/material";
 import OrderStepper from "./OrderStepper";
 import { Payments } from "@mui/icons-material";
 
 const OrderDetails = () => {
+  const dispatch = useAppDispatch();
+  const { auth, orders } = useAppSelector((store) => store);
+  const { orderItemId, orderId } = useParams();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    dispatch(
+      fetchOrderItemById({
+        orderItemId: orderItemId || "",
+        jwt: localStorage.getItem("jwt") || "",
+      })
+    );
+    dispatch(
+      fetchOrderById({
+        orderId: orderId || "",
+        jwt: localStorage.getItem("jwt") || "",
+      })
+    );
+  }, [auth.jwt]);
+
+  console.log("-------", orderId, "order ----- ", orders.currentOrder);
+
+  // if (!orders.orders || !orders.orderItem) {
+  //   return (
+  //     <div className="h-[80vh] flex justify-center items-center">
+  //       No order found
+  //     </div>
+  //   );
+  // }
+  if (!orders.currentOrder || !orders.orderItem) {
+  return (
+    <div className="h-[80vh] flex justify-center items-center">
+      Loading order details...
+    </div>
+  );
+}
+
+
+  const handleCancelOrder = () => {
+    dispatch(cancelOrder(orderId));
+  };
+
   return (
     <Box className="space-y-5 ">
       <section className="flex flex-col gap-5 justify-center items-center">
         <img
           className="w-[100px]"
-          src="https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcRnDaBUwtU0zb6OCu_C6C-NNOcT78nyilKkJxKrxSASTOBdmIUCJO0HhJ15P7hRjXxc2xyBaGJwpdpDZNUnTaWx6Ro9xj6RmWp6KNgWTsMi9KC5IPrntXor"
+          src={orders.orderItem?.product.images[0]}
           alt=""
         />
         <div className="text-sm space-y-1 text-center">
-          <h1 className="font-bold">Deep MarketPlace</h1>
-          <p>C J Enterprise Women's Kanjivaram Silk Saree</p>
+          <h1 className="font-bold">
+            {/* {orders.orderItem?.product.seller?.businessDetails.businessName} */}
+            {orders.orderItem?.product?.seller?.businessDetails?.businessName}
+
+          </h1>
+          <p>{orders.orderItem?.product.title}</p>
           <p>
             <strong>Size:</strong>M
           </p>
         </div>
         <div>
-          <Button>Write Review</Button>
+          <Button
+            onClick={() =>
+              navigate(`/reviews/${orders.orderItem?.product._id}/create`)
+            }
+          >
+            Write Review
+          </Button>
         </div>
       </section>
 
       <section className="border p-5">
-        <OrderStepper />
+        <OrderStepper orderStatus={orders.currentOrder?.orderStatus} />
       </section>
-
       <div className="border p-5">
         <h1 className="font-bold pb-3">Delivery Address</h1>
         <div className="text-sm space-y-2">
           <div className="flex gap-5 font-medium">
-            <p> Abhi Kumar</p>
+            <p> {orders.currentOrder?.shippingAddress.name}</p>
             <Divider flexItem orientation="vertical" />
-            <p>9265227411</p>
+            <p>{orders.currentOrder?.shippingAddress.mobile}</p>
           </div>
 
-          <p>saraimeer, mirjapur, Azamgarh-276540</p>
+          <p>
+            {orders.currentOrder?.shippingAddress.address},{" "}
+            {orders.currentOrder?.shippingAddress.city},{" "}
+            {orders.currentOrder?.shippingAddress.state} -{" "}
+            {orders.currentOrder?.shippingAddress.pinCode}
+          </p>
         </div>
       </div>
 
@@ -48,13 +109,14 @@ const OrderDetails = () => {
             <p>
               You saved{" "}
               <span className="text-green-500 font-medium text-xs">
-                ₹7500.00
+                ₹{orders.orderItem?.mrpPrice - orders.orderItem?.sellingPrice}
+                .00
               </span>{" "}
               on this item
             </p>
           </div>
 
-          <p className="font-medium">₹ 12495.00</p>
+          <p className="font-medium">₹ {orders.orderItem?.sellingPrice}.00</p>
         </div>
 
         <div className="px-5 ">
@@ -68,20 +130,23 @@ const OrderDetails = () => {
         <div className="px-5 pb-5">
           <p className="text-xs">
             <strong>Sold by : </strong>
-            Deep Clothing
+            {orders.orderItem.product.seller?.businessDetails.businessName}
           </p>
         </div>
 
-        <div className="p-5">
+        <div className="p-10">
           <Button
+            disabled={orders.currentOrder?.orderStatus === "CANCELLED"}
+            onClick={handleCancelOrder}
             color="error"
             sx={{ py: "0.7rem" }}
             className=""
             variant="outlined"
             fullWidth
           >
-             
-              Cancel Order
+            {orders.currentOrder?.orderStatus === "CANCELLED"
+              ? "order canceled"
+              : "Cancel Order"}
           </Button>
         </div>
       </div>

@@ -3,23 +3,85 @@ import { useEffect, useState } from "react";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
+
+
+const formatDateTime = () => {
+  const now = new Date();
+
+  return now.toLocaleString("en-IN", {
+    weekday: "short",
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+};
+
+
+
 const steps = [
-  { name: "Order Placed", description: "on Thu, 11 Jul", value: "PLACED" },
+  {
+    name: "Order Placed",
+    description: `on ${formatDateTime()}`,
+    value: "PLACED",
+  },
   {
     name: "Packed",
-    description: "Item Packed in Dispatch Warehouse",
+    description: `on ${formatDateTime()}`,
     value: "CONFIRMED",
   },
-  { name: "Shipped", description: "by Mon, 15 Jul", value: "SHIPPED" },
-  { name: "Arriving", description: "by 16 Jul - 18 Jul", value: "ARRIVING" },
-  { name: "Arrived", description: "by 16 Jul - 18 Jul", value: "DELIVERED" },
-  // { name: "Canceled", description: "by 16 Jul - 18 Jul", value: "CANCELLED" },
+  {
+    name: "Shipped",
+    description: `on ${formatDateTime()}`,
+    value: "SHIPPED",
+  },
+  {
+    name: "Arriving",
+    description: `on ${formatDateTime()}`,
+    value: "ARRIVING",
+  },
+  {
+    name: "Arrived",
+    description: `on ${formatDateTime()}`,
+    value: "DELIVERED",
+  },
 ];
 
+
 const canceledStep = [
-  { name: "Order Placed", description: "on Thu, 11 Jul", value: "PLACED" },
-  { name: "Order Canceled", description: "on Thu, 11 Jul", value: "CANCELLED" },
+  {
+    name: "Order Placed",
+    description: `on ${formatDateTime()}`,
+    value: "PLACED",
+  },
+  {
+    name: "Order Canceled",
+    description: `on ${formatDateTime()}`,
+    value: "CANCELLED",
+  },
 ];
+
+
+
+
+// const steps = [
+//   { name: "Order Placed", description: "on Thu, 11 Jul", value: "PLACED" },
+//   {
+//     name: "Packed",
+//     description: "Item Packed in Dispatch Warehouse",
+//     value: "CONFIRMED",
+//   },
+//   { name: "Shipped", description: "by Mon, 15 Jul", value: "SHIPPED" },
+//   { name: "Arriving", description: "by 16 Jul - 18 Jul", value: "ARRIVING" },
+//   { name: "Arrived", description: "by 16 Jul - 18 Jul", value: "DELIVERED" },
+// ];
+
+
+// const canceledStep = [
+//   { name: "Order Placed", description: "on Thu, 11 Jul", value: "PLACED" },
+//   { name: "Order Canceled", description: "on Thu, 11 Jul", value: "CANCELLED" },
+// ];
 
 const currentStep = 2; // Change this value based on the current step
 
@@ -79,13 +141,7 @@ const OrderStepper = ({ orderStatus }: any) => {
                     : ""
                 } w-full`}
               >
-                <p
-                  className={`
-                           
-                            `}
-                >
-                  {step.name}
-                </p>
+                <p className={``}>{step.name}</p>
                 <p
                   className={` ${
                     step.value === orderStatus

@@ -9,23 +9,64 @@ import {
   Wallet,
   WorkspacePremium,
 } from "@mui/icons-material";
-import { Button, Divider } from "@mui/material";
+import { Box, Button, Divider, Modal, Rating } from "@mui/material";
 import { teal } from "@mui/material/colors";
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import SimilarProduct from "../SimilarProduct/SimilarProduct";
+import {
+  useAppDispatch,
+  useAppSelector,
+} from "../../../../Redux Toolkit/Store";
+import { useNavigate, useParams } from "react-router";
+import {
+  fetchProductById,
+  getAllProducts,
+} from "../../../../Redux Toolkit/Customer/ProductSlice";
+import { fetchReviewsByProductId } from "../../../../Redux Toolkit/Customer/ReviewSlice";
+import { addItemToCart } from "../../../../Redux Toolkit/Customer/CartSlice";
+import ZoomableImage from "./ZoomableImage";
+import ProductReviewCard from "../../Review/ProductReviewCard";
+import RatingCard from "../../Review/RatingCard";
 
-const images = [
-  "https://ik.imagekit.io/4sjmoqtje/tr:w-1000,c-at_max/cdn/shop/files/green-tissue-saree-with-bead-and-cutdana-embroidery-sg338770-1.jpg?v=1757674612",
-  "https://ik.imagekit.io/4sjmoqtje/tr:w-1000,c-at_max/cdn/shop/files/green-tissue-saree-with-bead-and-cutdana-embroidery-sg338770-4.jpg?v=1757674612",
-  "https://ik.imagekit.io/4sjmoqtje/tr:w-1000,c-at_max/cdn/shop/files/green-tissue-saree-with-bead-and-cutdana-embroidery-sg338770-3.jpg?v=1757674612",
-  "https://ik.imagekit.io/4sjmoqtje/tr:w-1000,c-at_max/cdn/shop/files/green-tissue-saree-with-bead-and-cutdana-embroidery-sg338770-6.jpg?v=1757674612",
-];
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: "auto",
+  height: "100%",
+  // bgcolor: 'background.paper',
+  boxShadow: 24,
+  outline: "none",
+};
 
 const ProductDetails = () => {
-  const [currentImage, setCurrentImage] = useState(0);
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  const dispatch = useAppDispatch();
+  const { products, review } = useAppSelector((store) => store);
+  const navigate = useNavigate();
+  const { productId, categoryId } = useParams();
+  const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
 
-  const handleQuantitychange = (value) => setQuantity(quantity + value);
+  useEffect(() => {
+    if (productId) {
+      dispatch(fetchProductById(productId));
+      dispatch(fetchReviewsByProductId({ productId }));
+    }
+    dispatch(getAllProducts({ category: categoryId }));
+  }, [productId]);
+
+  const handleAddCart = () => {
+    dispatch(
+      addItemToCart({
+        jwt: localStorage.getItem("jwt"),
+        request: { productId, size: "FREE", quantity },
+      })
+    );
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 px-4 lg:px-24 py-10">
@@ -33,40 +74,50 @@ const ProductDetails = () => {
         {/* IMAGE SECTION */}
         <section className="flex flex-col lg:flex-row gap-5">
           <div className="w-full lg:w-[15%] flex lg:flex-col gap-3 order-2 lg:order-1">
-            {images.map((item, index) => (
+            {products.product?.images.map((item, index) => (
               <img
                 key={index}
-                onClick={() => setCurrentImage(index)}
+                onClick={() => setSelectedImage(index)}
+                className="lg:w-full w-[50px] cursor-pointer rounded-md"
                 src={item}
                 alt=""
-                className={`w-[70px] lg:w-full cursor-pointer rounded-xl border 
-                  ${
-                    currentImage === index
-                      ? "border-teal-600 ring-2 ring-teal-200"
-                      : "border-gray-200"
-                  } hover:scale-105 transition`}
               />
             ))}
           </div>
 
           <div className="w-full lg:w-[85%] order-1 lg:order-2">
             <img
-              src={images[currentImage]}
+              onClick={handleOpen}
+              src={products.product?.images[selectedImage]}
               alt=""
               className="w-full rounded-3xl shadow-xl cursor-zoom-in hover:scale-[1.02] transition"
             />
           </div>
+
+          <Modal
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+            <Box sx={style}>
+              <ZoomableImage
+                src={products.product?.images[selectedImage]}
+                alt=""
+              />
+            </Box>
+          </Modal>
         </section>
 
         {/* PRODUCT INFO */}
         <section>
-          <p className="text-xs uppercase tracking-wide text-teal-700 font-semibold">
-            Deep Clothing
-          </p>
-
           <h1 className="text-3xl font-bold text-gray-900 mt-1 leading-snug">
-            Green Tissue Saree With Bead And Cutdana Embroidery
+            {products.product?.seller?.businessDetails?.businessName}
           </h1>
+
+          <p className="text-xs uppercase tracking-wide text-teal-700 font-semibold">
+            {products.product?.title}
+          </p>
 
           {/* RATING */}
           <div className="flex items-center gap-3 bg-white shadow-sm rounded-xl px-4 py-2 w-fit mt-6">
@@ -77,34 +128,45 @@ const ProductDetails = () => {
           </div>
 
           {/* PRICE */}
-          <div className="mt-7">
-            <div className="flex items-center gap-4">
-              <span className="text-3xl font-extrabold text-gray-900">
-                ₹2499
+          <div className="space-y-2">
+            <div className="price flex items-center gap-3 mt-5 text-lg">
+              <span className="font-semibold text-gray-800">
+                {" "}
+                ₹{products.product?.sellingPrice}
               </span>
-              <span className="line-through text-gray-400 text-lg">₹3999</span>
-              <span className="bg-emerald-100 text-emerald-700 text-sm px-2 py-1 rounded-lg font-semibold">
-                10% OFF
+              <span className="text thin-line-through text-gray-400 ">
+                ₹{products.product?.mrpPrice}
+              </span>
+              <span className="text-[#00927c] font-semibold">
+                {products.product?.discountPercent}% off
               </span>
             </div>
-            <p className="text-sm text-gray-500 mt-2">
-              Inclusive of all taxes · Free shipping above ₹1500
+            <p className="text-sm">
+              Inclusive of all taxes. Free Shipping above ₹1500.
             </p>
           </div>
 
           {/* TRUST BADGES */}
-          <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4 bg-white rounded-2xl shadow-sm p-5">
-            {[
-              { icon: <Shield />, text: "Authentic & Quality Assured" },
-              { icon: <WorkspacePremium />, text: "100% Money Back Guarantee" },
-              { icon: <LocalShipping />, text: "Free Shipping & Easy Returns" },
-              { icon: <Wallet />, text: "Cash on Delivery Available" },
-            ].map((item, i) => (
-              <div key={i} className="flex items-center gap-3">
-                {React.cloneElement(item.icon, { sx: { color: teal[500] } })}
-                <p className="text-sm">{item.text}</p>
-              </div>
-            ))}
+          <div className="mt-7 space-y-3">
+            <div className="flex items-center gap-4">
+              <Shield sx={{ color: teal[400] }} />
+              <p>Authentic & Quality Assured</p>
+            </div>
+
+            <div className="flex items-center gap-4">
+              <WorkspacePremium sx={{ color: teal[400] }} />
+              <p>100% money back guarantee</p>
+            </div>
+
+            <div className="flex items-center gap-4">
+              <LocalShipping sx={{ color: teal[400] }} />
+              <p>Free Shipping & Returns</p>
+            </div>
+
+            <div className="flex items-center gap-4">
+              <Wallet sx={{ color: teal[400] }} />
+              <p>Pay on delivery might be available</p>
+            </div>
           </div>
 
           {/* QUANTITY */}
@@ -115,7 +177,7 @@ const ProductDetails = () => {
                 size="small"
                 variant="outlined"
                 disabled={quantity === 1}
-                onClick={() => handleQuantitychange(-1)}
+                onClick={() => setQuantity(quantity - 1)}
               >
                 <Remove />
               </Button>
@@ -125,7 +187,7 @@ const ProductDetails = () => {
               <Button
                 size="small"
                 variant="outlined"
-                onClick={() => handleQuantitychange(1)}
+                onClick={() => setQuantity(quantity + 1)}
               >
                 <Add />
               </Button>
@@ -135,6 +197,7 @@ const ProductDetails = () => {
           {/* ACTION BUTTONS */}
           <div className="mt-10 flex gap-4">
             <Button
+              onClick={handleAddCart}
               fullWidth
               variant="contained"
               startIcon={<AddShoppingCart />}
@@ -159,12 +222,29 @@ const ProductDetails = () => {
 
           {/* DESCRIPTION */}
           <div className="mt-6 bg-white rounded-2xl shadow-sm p-6 text-gray-600 leading-relaxed">
-            Bright yet sophisticated, this green tissue saree brings a
-            celebratory vibe. The border is embroidered with buttis, beads,
-            cutdana, and sequins for added texture. Perfect for wedding guests
-            who love elegant detail.
+            <p>{products.product?.description}</p>
           </div>
+
+           <div className="ratings w-full mt-10">
+            <h1 className="font-semibold text-lg pb-4">Review & Ratings</h1>
+            <RatingCard totalReview={review.reviews.length} />
+            <div className="mt-10">
+              <div className="space-y-5">
+                {review.reviews.map((item) => (
+                  <div className="space-y-5">
+                    <ProductReviewCard item={item} />
+                    <Divider />
+                  </div>
+                ))}
+                <Button onClick={() => navigate(`/reviews/${productId}`)}>
+                  View All {review.reviews.length} Reviews
+                </Button>
+              </div>
+            </div>
+          </div>
+
         </section>
+        
       </div>
 
       {/* SIMILAR PRODUCTS */}
