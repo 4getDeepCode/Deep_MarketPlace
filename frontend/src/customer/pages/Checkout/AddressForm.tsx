@@ -22,9 +22,13 @@ const ContactSchema = Yup.object().shape({
 
 interface AddressFormProp {
   paymentGateway: string;
+  handleClose?: () => void;
 }
 
-const AddressForm: React.FC<AddressFormProp> = ({ paymentGateway }) => {
+const AddressForm: React.FC<AddressFormProp> = ({
+  paymentGateway,
+  handleClose,
+}) => {
   const dispatch = useAppDispatch();
   const formik = useFormik({
     initialValues: {
@@ -40,6 +44,7 @@ const AddressForm: React.FC<AddressFormProp> = ({ paymentGateway }) => {
     onSubmit: (values) => {
       console.log("form submited", values);
       handleCreateOrder(values as Address);
+      handleClose?.();
     },
   });
 

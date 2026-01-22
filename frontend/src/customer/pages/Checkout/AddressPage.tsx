@@ -12,7 +12,6 @@ import {
 import { Add } from "@mui/icons-material";
 import PricingCard from "../Cart/PricingCard";
 import AddressForm from "./AddressForm";
-
 import { useState } from "react";
 import AddressCard from "./AddressCard";
 
@@ -36,7 +35,8 @@ const paymentGatwayList = [
   },
   {
     value: "STRIPE",
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Stripe_Logo%2C_revised_2016.svg/1280px-Stripe_Logo%2C_revised_2016.svg.png",
+    image:
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Stripe_Logo%2C_revised_2016.svg/1280px-Stripe_Logo%2C_revised_2016.svg.png",
     label: "Stripe",
   },
 ];
@@ -45,7 +45,7 @@ const AddressPage = () => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((store) => store);
   const [paymentGateway, setPaymentGateway] = useState(
-    paymentGatwayList[0].value
+    paymentGatwayList[0].value,
   );
 
   const [open, setOpen] = React.useState(false);
@@ -64,7 +64,7 @@ const AddressPage = () => {
           paymentGateway,
           address: user.user?.addresses[value],
           jwt: localStorage.getItem("jwt") || "",
-        })
+        }),
       );
   };
 
