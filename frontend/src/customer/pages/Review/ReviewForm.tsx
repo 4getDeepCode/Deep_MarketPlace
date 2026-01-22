@@ -104,13 +104,14 @@ const ReviewForm: React.FC = () => {
                     id="rating"
                     name="rating"
                     value={formik.values.rating}
-                    onChange={(newValue) =>
+                    onChange={(_event, newValue) =>
                         formik.setFieldValue('rating', newValue)
                     }
                     onBlur={formik.handleBlur}
                     precision={0.5}
                 />
             </div>
+
             {formik.touched.rating && formik.errors.rating && (
                 <Typography color="error" variant="body2">
                     {formik.errors.rating}

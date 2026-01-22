@@ -24,7 +24,6 @@ const initialValues = {
 };
 
 const UpdateDealForm = ({ id }: { id: number }) => {
- 
   const dispatch = useAppDispatch();
   const formik = useFormik({
     initialValues,

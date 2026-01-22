@@ -64,7 +64,7 @@ const ProductDetails = () => {
       addItemToCart({
         jwt: localStorage.getItem("jwt"),
         request: { productId, size: "FREE", quantity },
-      })
+      }),
     );
   };
 
@@ -225,7 +225,7 @@ const ProductDetails = () => {
             <p>{products.product?.description}</p>
           </div>
 
-           <div className="ratings w-full mt-10">
+          <div className="ratings w-full mt-10">
             <h1 className="font-semibold text-lg pb-4">Review & Ratings</h1>
             <RatingCard totalReview={review.reviews.length} />
             <div className="mt-10">
@@ -242,9 +242,7 @@ const ProductDetails = () => {
               </div>
             </div>
           </div>
-
         </section>
-        
       </div>
 
       {/* SIMILAR PRODUCTS */}
