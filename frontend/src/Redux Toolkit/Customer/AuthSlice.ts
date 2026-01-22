@@ -23,7 +23,7 @@ const initialState: AuthState = {
 // Define the base URL for the API
 const API_URL = "/auth";
 
-export const sendLoginSignupOtp = createAsyncThunk<ApiResponse,{ email: string }>("auth/sendLoginSignupOtp", async ({ email }, { rejectWithValue }) => {
+export const sendLoginSignupOtp = createAsyncThunk<ApiResponse,{ email: string }>("auth/send/LoginSignupOtp", async ({ email }, { rejectWithValue }) => {
   try {
     const response = await api.post(`${API_URL}/sent/login-signup-otp`, {
       email,
