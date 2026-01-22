@@ -66,6 +66,6 @@ app.use("/chat", chatbotRouters);
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, async () => {
-  console.log(`🚀 Server running on port ${PORT}`);
   await connectDB();
+  console.log(`🚀 Server running on port ${PORT}`);
 });
