@@ -22,7 +22,7 @@ import CategorySheet from "./CategorySheet";
 import DrawerList from "./DrawerList";
 import { useNavigate } from "react-router-dom";
 import "./Navbar.css";
-import { useAppDispatch, useAppSelector } from "../../../Redux Toolkit/Store";
+import { useAppSelector } from "../../../Redux Toolkit/Store";
 import logo from "../../../assets/deep.jpeg";
 import * as React from "react";
 
@@ -31,8 +31,7 @@ const Navbar = () => {
   const theme = useTheme();
   const isLarge = useMediaQuery(theme.breakpoints.up("lg"));
   const [selectedCategory, setSelectedCategory] = useState("men");
-  const dispatch = useAppDispatch();
-  const { user, auth, cart, sellers } = useAppSelector((store) => store);
+  const { user, cart, sellers } = useAppSelector((store) => store);
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
   const toggleDrawer = (newOpen: boolean) => () => {

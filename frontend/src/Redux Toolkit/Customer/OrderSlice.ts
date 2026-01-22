@@ -46,13 +46,12 @@ export const fetchUserOrderHistory = createAsyncThunk<Order[], string>(
 );
 
 // Fetch order by ID
-export const fetchOrderById = createAsyncThunk<
-  Order,
-  { orderId: string; jwt: string }
->("orders/fetchOrderById", async ({ orderId, jwt }, { rejectWithValue }) => {
+export const fetchOrderById = createAsyncThunk< Order,{ orderId: string; jwt: string }>("orders/fetchOrderById", async ({ orderId, jwt }, { rejectWithValue }) => {
   try {
     const response = await api.get(`${API_URL}/${orderId}`, {
-      headers: { Authorization: `Bearer ${localStorage.getItem("jwt")}` },
+      headers: { 
+        Authorization: `Bearer ${jwt}` 
+      },
     });
     console.log("order fetched -", response.data);
     return response.data;
@@ -61,6 +60,7 @@ export const fetchOrderById = createAsyncThunk<
     return rejectWithValue("Failed to fetch order");
   }
 });
+
 
 // Create a new order
 export const createOrder = createAsyncThunk<

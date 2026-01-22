@@ -1,10 +1,10 @@
 import * as Yup from "yup";
-import { useAppDispatch, useAppSelector } from "../../../Redux Toolkit/Store";
 import { useFormik } from "formik";
 import { updateDeal } from "../../../Redux Toolkit/Admin/DealSlice";
 import { useEffect } from "react";
 import { fetchHomeCategories } from "../../../Redux Toolkit/Admin/AdminSlice";
 import { Button, TextField, Typography } from "@mui/material";
+import { useAppDispatch } from "../../../Redux Toolkit/Store";
 
 // Validation schema using Yup
 const validationSchema = Yup.object({
@@ -24,7 +24,7 @@ const initialValues = {
 };
 
 const UpdateDealForm = ({ id }: { id: number }) => {
-  const { admin } = useAppSelector((store) => store);
+ 
   const dispatch = useAppDispatch();
   const formik = useFormik({
     initialValues,

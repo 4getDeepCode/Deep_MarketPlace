@@ -9,7 +9,7 @@ import {
   Wallet,
   WorkspacePremium,
 } from "@mui/icons-material";
-import { Box, Button, Divider, Modal, Rating } from "@mui/material";
+import { Box, Button, Divider, Modal } from "@mui/material";
 import { teal } from "@mui/material/colors";
 import { useEffect, useState } from "react";
 import SimilarProduct from "../SimilarProduct/SimilarProduct";

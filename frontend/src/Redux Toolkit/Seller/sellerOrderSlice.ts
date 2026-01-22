@@ -1,4 +1,3 @@
-// src/redux/slices/sellerOrderSlice.ts
 
 import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/toolkit';
 import { type Order, type OrderStatus } from '../../types/orderTypes'; 
@@ -45,7 +44,7 @@ export const updateOrderStatus = createAsyncThunk<Order,
     try {
       const response = await api.patch(`/api/seller/orders/${orderId}/status/${orderStatus}`, 
         {}, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('jwt')}` },
+        headers: { Authorization: `Bearer ${jwt}` },
       });
       console.log("order status updated",response.data)
       return response.data;

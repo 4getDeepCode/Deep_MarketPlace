@@ -10,15 +10,15 @@ import { Button, FormControl,  Menu, MenuItem, Select, styled} from '@mui/materi
 import { useAppDispatch, useAppSelector } from '../../../Redux Toolkit/Store';
 import { fetchSellers, updateSellerAccountStatus } from '../../../Redux Toolkit/Seller/sellerSlice';
 
-function createData(
-    name: string,
-    calories: number,
-    fat: number,
-    carbs: number,
-    protein: number,
-) {
-    return { name, calories, fat, carbs, protein };
-}
+// function createData(
+//     name: string,
+//     calories: number,
+//     fat: number,
+//     carbs: number,
+//     protein: number,
+// ) {
+//     return { name, calories, fat, carbs, protein };
+// }
 
 
 
@@ -53,7 +53,7 @@ const accountStatuses = [
 
 
 export default function SellersTable() {
-    const [page, setPage] = React.useState(0);
+    const [_page, _setPage] = React.useState(0);
     const [accountStatus, setAccountStatus] = React.useState("ACTIVE")
     const { sellers } = useAppSelector(store => store)
 
