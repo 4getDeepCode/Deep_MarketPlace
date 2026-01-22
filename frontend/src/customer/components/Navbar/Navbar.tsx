@@ -12,19 +12,19 @@ import {
   Box,
   Button,
   Drawer,
-  Icon,
   IconButton,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
 import { mainCategory } from "../../../data/Category/mainCategory";
-import React, { useState } from "react";
+import { useState } from "react";
 import CategorySheet from "./CategorySheet";
 import DrawerList from "./DrawerList";
 import { useNavigate } from "react-router-dom";
 import "./Navbar.css";
 import { useAppDispatch, useAppSelector } from "../../../Redux Toolkit/Store";
 import logo from "../../../assets/deep.jpeg";
+import * as React from "react";
 
 const Navbar = () => {
   const [showSheet, setShowSheet] = useState(false);

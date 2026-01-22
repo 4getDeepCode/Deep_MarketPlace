@@ -1,6 +1,8 @@
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import * as React from "react";
 import "./ProductCard.css";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
+
 import { Product } from "../../../../types/productTypes";
 import {
   useAppDispatch,
@@ -12,7 +14,6 @@ import { Favorite, FavoriteBorder, ModeComment } from "@mui/icons-material";
 import { teal } from "@mui/material/colors";
 import { Box, Button, Modal } from "@mui/material";
 import ChatBot from "../../ChatBot/ChatBot";
-import * as React from "react";
 
 interface ProductCardProps {
   item: Product;
@@ -71,7 +72,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ item, categoryId }) => {
           navigate(
             `/product-details/${categoryId}/${encodeURIComponent(item.title)}/${
               item._id
-            }`
+            }`,
           )
         }
         className="group relative rounded-xl bg-white p-3 shadow-sm transition-all duration-300 hover:shadow-lg"
@@ -97,7 +98,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ item, categoryId }) => {
           {isHovered && (
             <div className="indicator flex flex-col items-center space-y-2">
               <div className="flex gap-4">
-                {item.images?.map((_:any, index:any) => (
+                {item.images?.map((_: any, index: any) => (
                   <button
                     key={index}
                     className={`indicator-button ${

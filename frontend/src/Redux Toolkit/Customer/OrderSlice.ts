@@ -1,5 +1,3 @@
-// src/slices/orderSlice.ts
-
 import {
   createSlice,
   createAsyncThunk,
@@ -41,10 +39,10 @@ export const fetchUserOrderHistory = createAsyncThunk<Order[], string>(
     } catch (error: any) {
       console.log("error ", error.response);
       return rejectWithValue(
-        error.response.data.error || "Failed to fetch order history"
+        error.response.data.error || "Failed to fetch order history",
       );
     }
-  }
+  },
 );
 
 // Fetch order by ID
@@ -78,7 +76,7 @@ export const createOrder = createAsyncThunk<
         {
           headers: { Authorization: `Bearer ${jwt}` },
           params: { paymentMethod: paymentGateway },
-        }
+        },
       );
       console.log("order created ", response.data);
       if (response.data.payment_link_url) {
@@ -90,7 +88,7 @@ export const createOrder = createAsyncThunk<
       console.log("error ", error.response);
       return rejectWithValue("Failed to create order");
     }
-  }
+  },
 );
 
 export const fetchOrderItemById = createAsyncThunk<
@@ -109,7 +107,7 @@ export const fetchOrderItemById = createAsyncThunk<
       console.log("error ", error.response);
       return rejectWithValue("Failed to create order");
     }
-  }
+  },
 );
 
 // payment success handler
@@ -139,7 +137,7 @@ export const paymentSuccess = createAsyncThunk<
       }
       return rejectWithValue("Failed to process payment");
     }
-  }
+  },
 );
 
 export const cancelOrder = createAsyncThunk<Order, any>(
@@ -153,7 +151,7 @@ export const cancelOrder = createAsyncThunk<Order, any>(
           headers: {
             Authorization: `Bearer ${localStorage.getItem("jwt")}`,
           },
-        }
+        },
       );
       console.log("cancel order ", response.data);
       return response.data;
@@ -164,7 +162,7 @@ export const cancelOrder = createAsyncThunk<Order, any>(
       }
       return rejectWithValue("An error occurred while cancelling the order.");
     }
-  }
+  },
 );
 
 const orderSlice = createSlice({
@@ -184,7 +182,7 @@ const orderSlice = createSlice({
         (state, action: PayloadAction<Order[]>) => {
           state.orders = action.payload;
           state.loading = false;
-        }
+        },
       )
       .addCase(fetchUserOrderHistory.rejected, (state, action) => {
         state.loading = false;
@@ -201,7 +199,7 @@ const orderSlice = createSlice({
         (state, action: PayloadAction<Order>) => {
           state.currentOrder = action.payload;
           state.loading = false;
-        }
+        },
       )
       .addCase(fetchOrderById.rejected, (state, action) => {
         state.loading = false;
@@ -257,7 +255,7 @@ const orderSlice = createSlice({
       .addCase(cancelOrder.fulfilled, (state, action) => {
         state.loading = false;
         state.orders = state.orders.map((order) =>
-          order._id === action.payload._id ? action.payload : order
+          order._id === action.payload._id ? action.payload : order,
         );
         state.orderCanceled = true;
         state.currentOrder = action.payload;

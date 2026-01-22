@@ -3,6 +3,7 @@ import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow
 import { fetchPayoutsBySeller } from "../../../Redux Toolkit/Seller/payoutSlice";
 import { useAppDispatch, useAppSelector } from "../../../Redux Toolkit/Store";
 import * as React from "react";
+import { Order, OrderItem } from "../../../types/orderTypes";
 
 const PayoutsTable = () => {
   const { sellerOrder } = useAppSelector((store) => store);

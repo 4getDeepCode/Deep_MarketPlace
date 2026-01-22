@@ -39,7 +39,7 @@ const DrawerList = ({ toggleDrawer, menu, menu2 }: DrawerListProps) => {
       <div className="flex flex-col  justify-between  h-full w-[300px] border-r border-gray-300 py-5">
         <div>
           <div className="space-y-2">
-            {menu.map((item, index) => (
+            {menu.map((item, _index) => (
               <div
                 key={item.name}
                 onClick={handleClick(item)}
@@ -84,7 +84,7 @@ const DrawerList = ({ toggleDrawer, menu, menu2 }: DrawerListProps) => {
         <div className="space-y-4">
           <Divider />
           <div className="space-y-2">
-            {menu2.map((item, index) => (
+            {menu2.map((item, _index) => (
               <div
                 onClick={handleClick(item)}
                 className="pr-9 cursor-pointer"

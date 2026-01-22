@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router";
+import { Deal } from "../../../../types/dealTypes";
 
 const DealCard = ({ deal }: { deal: Deal }) => {
   const navigate = useNavigate();

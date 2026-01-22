@@ -10,7 +10,7 @@ import { useNavigate } from "react-router";
 
 interface ChatBotProps {
   handleClose: (e: any) => void;
-  productId?: string;
+  productId?: number
 }
 
 const ChatBot = ({ handleClose, productId }: ChatBotProps) => {
