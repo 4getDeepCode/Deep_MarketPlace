@@ -3,7 +3,7 @@ const authController = require("../controllers/authController");
 
 const router = express.Router();
 
-router.post("/send/login-signup-otp", authController.sentLoginOtp);
+router.post("/auth/send/login-signup-otp", authController.sentLoginOtp);
 router.post("/signup", authController.createUserHandler);
 router.post("/signin", authController.signin);
 
