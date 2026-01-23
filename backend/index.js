@@ -3,6 +3,7 @@ const express = require("express");
 const cors = require("cors");
 
 const connectDB = require("./src/config/db");
+const bodyParser = require("body-parser");
 
 const app = express();
 app.use(express.json());
@@ -21,6 +22,8 @@ app.get("/", (req, res) => {
     message: "Hello All! Welcome To Deep Marketplace From Backend System 👋",
   });
 });
+
+app.use(bodyParser.json());
 
 const adminRoutes = require("./src/routers/adminRoutes");
 const sellerRoutes = require("./src/routers/sellerRoutes");
