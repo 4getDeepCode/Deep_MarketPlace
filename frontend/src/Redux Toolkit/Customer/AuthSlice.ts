@@ -29,8 +29,14 @@ export const sendLoginSignupOtp = createAsyncThunk<
 >("auth/send/LoginSignupOtp", async ({ email }, { rejectWithValue }) => {
   try {
     const response = await api.post(`${API_URL}/send/login-signup-otp`, {
-      email,
-    });
+      email
+    },
+   {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    withCredentials: true,
+  });
     console.log("otp sent successfully", response.data);
     return response.data;
   } catch (error: any) {
@@ -47,9 +53,10 @@ export const signup = createAsyncThunk<AuthResponse, SignupRequest>(
       const response = await api.post<AuthResponse>(
         `${API_URL}/signup`,
         signupRequest,
+        { withCredentials: true }
       );
       signupRequest.navigate("/");
-      localStorage.setItem("jwt", response.data.jwt);
+      // localStorage.setItem("jwt", response.data.jwt);
       return response.data;
     } catch (error: any) {
       return rejectWithValue("Signup failed");
@@ -64,9 +71,10 @@ export const signin = createAsyncThunk<AuthResponse, LoginRequest>(
       const response = await api.post<AuthResponse>(
         `${API_URL}/signin`,
         loginRequest,
+        { withCredentials: true }
       );
       console.log("login successful", response.data);
-      localStorage.setItem("jwt", response.data.jwt);
+      // localStorage.setItem("jwt", response.data.jwt);
       loginRequest.navigate("/");
       return response.data;
     } catch (error: any) {
