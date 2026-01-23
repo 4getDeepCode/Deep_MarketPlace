@@ -27,6 +27,13 @@ class AuthController {
       }
 
       const token = await AuthService.createUser(req.body);
+      res.cookie("token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "none",
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+      });
+
       const authResponse = {
         jwt: token,
         message: "Register Success",
@@ -46,6 +53,14 @@ class AuthController {
     console.log("Signing in...");
     try {
       const authResponse = await AuthService.signin(req.body);
+      
+      res.cookie("token", authResponse.jwt, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "none",
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+      });
+
       return res.status(200).json(authResponse);
     } catch (error) {
       if (error instanceof Error || error instanceof UserError) {
