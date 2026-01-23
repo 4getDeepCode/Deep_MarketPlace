@@ -5,15 +5,40 @@ const connectDB = require("./src/config/db");
 
 const app = express();
 
+// app.use(
+//   cors({
+//     origin: process.env.CLIENT_BASE_URL,
+//     methods: ["GET", "POST", "PUT", "DELETE"],
+//     credentials: true,
+//   }),
+// );
+
 app.use(
   cors({
-    origin: process.env.CLIENT_BASE_URL,
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    origin: function (origin, callback) {
+      const allowedOrigins = [
+        "http://localhost:5173",
+        "https://deep-marketplace-frontend.onrender.com",
+      ];
+
+      // allow server-to-server or Postman
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   }),
 );
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 
 app.get("/", (req, res) => {
   res.send({
