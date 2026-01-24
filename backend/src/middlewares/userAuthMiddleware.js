@@ -1,12 +1,8 @@
 const jwt = require("jsonwebtoken");
 const UserService = require("../services/UserService");
 
-
-
-
 const authMiddleware = async (req, res, next) => {
   try {
-    console.log("🔥 AUTH MIDDLEWARE HIT:", req.originalUrl);
     const authHeader = req.header("Authorization");
     if (!authHeader) {
       return res
@@ -19,7 +15,7 @@ const authMiddleware = async (req, res, next) => {
       return res.status(401).json({ message: "jwt token is missing" });
     }
 
-    const user = await UserService.findUserProfileByJwt(token)
+    const user = await UserService.findUserProfileByJwt(token);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
