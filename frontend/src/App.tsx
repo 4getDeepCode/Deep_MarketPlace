@@ -3,10 +3,7 @@ import { useAppDispatch, useAppSelector } from "./Redux Toolkit/Store";
 import { useEffect } from "react";
 import { fetchSellerProfile } from "./Redux Toolkit/Seller/sellerSlice";
 import { fetchUserProfile } from "./Redux Toolkit/Customer/UserSlice";
-import {
-  createHomeCategories,
-  fetchHomePageData,
-} from "./Redux Toolkit/Customer/Customer/AsyncThunk";
+import { createHomeCategories, fetchHomePageData } from "./Redux Toolkit/Customer/Customer/AsyncThunk";
 import { homeCategories } from "./data/homeCategories";
 import { ThemeProvider } from "@emotion/react";
 import customeTheme from "./Theme/customTheme";
@@ -20,22 +17,28 @@ import CustomerRoutes from "./routes/CustomerRoutes";
 
 function App() {
   const dispatch = useAppDispatch();
-  const {sellers, user } = useAppSelector((store) => store);
+  const { auth, sellerAuth, sellers, user } = useAppSelector((store) => store);
   const navigate = useNavigate();
 
-
-
   useEffect(() => {
-    const jwt = localStorage.getItem("jwt");
-    if (!jwt) return;
+    if (localStorage.getItem("jwt")) {
+      dispatch(
+        fetchUserProfile({
+          jwt: localStorage.getItem("jwt") || auth.jwt || "",
+          navigate,
+        })
+      );
+      dispatch(
+        fetchSellerProfile(localStorage.getItem("jwt") || sellerAuth.jwt)
+      );
+    }
+  }, [auth.jwt, sellerAuth.jwt]);
 
-    dispatch(fetchUserProfile({ jwt, navigate }));
-    dispatch(fetchSellerProfile(jwt));
-  }, []);
+  
 
   useEffect(() => {
     dispatch(createHomeCategories(homeCategories));
-    dispatch(fetchHomePageData());
+    dispatch(fetchHomePageData())
   }, [dispatch]);
 
   return (
