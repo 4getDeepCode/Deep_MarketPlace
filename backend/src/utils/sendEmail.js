@@ -21,33 +21,61 @@
 
 // module.exports = { sendVerificationEmail };
 
-const nodemailer = require("nodemailer");
+// const nodemailer = require("nodemailer");
+
+// async function sendVerificationEmail(to, subject, text) {
+//   try {
+//     const transporter = nodemailer.createTransport({
+//       host: "smtp.gmail.com",
+//       port: 587,
+//       secure: false,
+//       auth: {
+//         user: process.env.EMAIL_USER,
+//         pass: process.env.EMAIL_PASS,
+//       },
+//     });
+
+//     await transporter.verify();
+
+//     const mailOptions = {
+//       from: `"DeepMarketPlace" <${process.env.EMAIL_USER}>`,
+//       to,
+//       subject,
+//       text,
+//     };
+
+//     await transporter.sendMail(mailOptions);
+//     console.log("✅ OTP email sent to:", to);
+//   } catch (error) {
+//     console.error("❌ Email error:", error);
+//     throw error;
+//   }
+// }
+
+// module.exports = { sendVerificationEmail };
+
+const SibApiV3Sdk = require("sib-api-v3-sdk");
+
+const client = SibApiV3Sdk.ApiClient.instance;
+client.authentications["api-key"].apiKey = process.env.BREVO_API_KEY;
+
+const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
 
 async function sendVerificationEmail(to, subject, text) {
   try {
-    const transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 587,
-      secure: false,
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
+    await apiInstance.sendTransacEmail({
+      sender: {
+        email: "deepc2060@gmail.com",
+        name: "DeepMarketPlace",
       },
+      to: [{ email: to }],
+      subject,
+      textContent: text,
     });
 
-    await transporter.verify();
-
-    const mailOptions = {
-      from: `"DeepMarketPlace" <${process.env.EMAIL_USER}>`,
-      to,
-      subject,
-      text,
-    };
-
-    await transporter.sendMail(mailOptions);
     console.log("✅ OTP email sent to:", to);
   } catch (error) {
-    console.error("❌ Email error:", error);
+    console.error("❌ Email error:", error.response?.body || error.message);
     throw error;
   }
 }
