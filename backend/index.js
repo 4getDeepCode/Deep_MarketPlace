@@ -12,7 +12,7 @@ app.use(cookieParser());
 
 app.use(
   cors({
-    origin: process.env.CLIENT_BASE_URL ||"http://localhost:5173",
+    origin: process.env.CLIENT_BASE_URL || "http://localhost:5173",
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   }),
@@ -23,8 +23,6 @@ app.get("/", (req, res) => {
     message: "Hello All! Welcome To Deep Marketplace From Backend System 👋",
   });
 });
-
-
 
 const adminRoutes = require("./src/routers/adminRoutes");
 const sellerRoutes = require("./src/routers/sellerRoutes");

@@ -1,8 +1,12 @@
 const jwt = require("jsonwebtoken");
 const UserService = require("../services/UserService");
 
+
+
+
 const authMiddleware = async (req, res, next) => {
   try {
+    console.log("🔥 AUTH MIDDLEWARE HIT:", req.originalUrl);
     const authHeader = req.header("Authorization");
     if (!authHeader) {
       return res
