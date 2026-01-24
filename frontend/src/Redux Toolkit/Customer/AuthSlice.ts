@@ -21,15 +21,15 @@ const initialState: AuthState = {
 };
 
 // Define the base URL for the API
-const API_URL = "/auth";
+// const API_URL = "/auth";
 
 export const sendLoginSignupOtp = createAsyncThunk<
   ApiResponse,
   { email: string }
 >("auth/sendLoginSignupOtp", async ({ email }, { rejectWithValue }) => {
   try {
-    const response = await api.post(`${API_URL}/sent/login-signup-otp`, {
-      email,
+    const response = await api.post("/auth/sent/login-signup-otp", {
+      email
     });
     console.log("otp sent successfully", response.data);
     return response.data;
@@ -45,8 +45,8 @@ export const signup = createAsyncThunk<AuthResponse, SignupRequest>(
     console.log("signup ", signupRequest);
     try {
       const response = await api.post<AuthResponse>(
-        `${API_URL}/signup`,
-        signupRequest,
+        "/auth/signup",
+        signupRequest
       );
       signupRequest.navigate("/");
       localStorage.setItem("jwt", response.data.jwt);
@@ -62,8 +62,8 @@ export const signin = createAsyncThunk<AuthResponse, LoginRequest>(
   async (loginRequest, { rejectWithValue }) => {
     try {
       const response = await api.post<AuthResponse>(
-        `${API_URL}/signin`,
-        loginRequest,
+      "/auth/signin",
+        loginRequest
       );
       console.log("login successful", response.data);
       localStorage.setItem("jwt", response.data.jwt);
@@ -82,8 +82,8 @@ export const resetPassword = createAsyncThunk<
 >("auth/resetPassword", async (resetPasswordRequest, { rejectWithValue }) => {
   try {
     const response = await api.post<ApiResponse>(
-      `${API_URL}/reset-password`,
-      resetPasswordRequest,
+      "/auth/reset-password",
+      resetPasswordRequest
     );
     return response.data;
   } catch (error: any) {
@@ -97,7 +97,7 @@ export const resetPasswordRequest = createAsyncThunk<
 >("auth/resetPasswordRequest", async ({ email }, { rejectWithValue }) => {
   try {
     const response = await api.post<ApiResponse>(
-      `${API_URL}/reset-password-request`,
+      "/auth/reset-password-request",
       { email },
     );
     return response.data;
