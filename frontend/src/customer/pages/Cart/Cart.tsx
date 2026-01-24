@@ -19,8 +19,8 @@ const Cart = () => {
   const [snackbarOpen, setOpenSnackbar] = useState(false);
 
   useEffect(() => {
-    dispatch(fetchUserCart(localStorage.getItem("jwt") || ""));
-  }, [auth.jwt]);
+    dispatch(fetchUserCart());
+  }, [auth]);
 
   const handleChange = (e: any) => {
     setCouponCode(e.target.value);

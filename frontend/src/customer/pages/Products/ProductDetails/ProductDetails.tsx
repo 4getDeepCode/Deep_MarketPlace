@@ -62,7 +62,7 @@ const ProductDetails = () => {
   const handleAddCart = () => {
     dispatch(
       addItemToCart({
-        productId,
+        productId: Number(productId),
         size: "FREE",
         quantity,
       }),
