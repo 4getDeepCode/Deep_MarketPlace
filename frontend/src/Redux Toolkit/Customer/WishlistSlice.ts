@@ -1,4 +1,8 @@
-import { createSlice, createAsyncThunk, type PayloadAction } from "@reduxjs/toolkit";
+import {
+  createSlice,
+  createAsyncThunk,
+  type PayloadAction,
+} from "@reduxjs/toolkit";
 import { type Wishlist, type WishlistState } from "../../types/wishlistTypes";
 import { api } from "../../Config/Api";
 
@@ -11,47 +15,46 @@ const initialState: WishlistState = {
 export const getWishlistByUserId = createAsyncThunk(
   "wishlist/getWishlistByUserId",
   async (_, { rejectWithValue }) => {
+    const jwt = localStorage.getItem("jwt");
+    if (!jwt) return rejectWithValue("Not authenticated");
     try {
       const response = await api.get(`/api/wishlist`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-        },
+        headers: { Authorization: `Bearer ${jwt}` },
       });
       console.log("wishlist fetch ", response.data);
       return response.data;
     } catch (error: any) {
       console.log("error ", error);
       return rejectWithValue(
-        error.response?.data.message || "Failed to fetch wishlist"
+        error.response?.data.message || "Failed to fetch wishlist",
       );
     }
-  }
+  },
 );
 
 export const addProductToWishlist = createAsyncThunk(
   "wishlist/addProductToWishlist",
-  async (
-    { productId }: {productId: number },
-    { rejectWithValue }
-  ) => {
+  async ({ productId }: { productId: number }, { rejectWithValue }) => {
+    const jwt = localStorage.getItem("jwt");
+    if (!jwt) return rejectWithValue("Not authenticated");
     try {
       const response = await api.post(
         `/api/wishlist/add-product/${productId}`,
-        { },
+        {},
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+            Authorization: `Bearer $(jwt)}`,
           },
-        }
+        },
       );
       console.log(" add product ", response.data);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(
-        error.response?.data.message || "Failed to add product to wishlist"
+        error.response?.data.message || "Failed to add product to wishlist",
       );
     }
-  }
+  },
 );
 
 // Slice
@@ -76,14 +79,14 @@ const wishlistSlice = createSlice({
       (state, action: PayloadAction<Wishlist>) => {
         state.wishlist = action.payload;
         state.loading = false;
-      }
+      },
     );
     builder.addCase(
       getWishlistByUserId.rejected,
       (state, action: PayloadAction<any>) => {
         state.loading = false;
         state.error = action.payload;
-      }
+      },
     );
 
     // addProductToWishlist
@@ -96,14 +99,14 @@ const wishlistSlice = createSlice({
       (state, action: PayloadAction<Wishlist>) => {
         state.wishlist = action.payload;
         state.loading = false;
-      }
+      },
     );
     builder.addCase(
       addProductToWishlist.rejected,
       (state, action: PayloadAction<any>) => {
         state.loading = false;
         state.error = action.payload;
-      }
+      },
     );
   },
 });

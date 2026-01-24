@@ -25,7 +25,9 @@ const API_URL = "/api/cart";
 
 export const fetchUserCart = createAsyncThunk<Cart, string>(
   "cart/fetchUserCart",
-  async (jwt: string, { rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
+    const jwt = localStorage.getItem("jwt");
+    if (!jwt) return rejectWithValue("Not authenticated");
     try {
       const response = await api.get(API_URL, {
         headers: {
@@ -38,7 +40,7 @@ export const fetchUserCart = createAsyncThunk<Cart, string>(
       console.log("error ", error.response);
       return rejectWithValue("Failed to fetch user cart");
     }
-  }
+  },
 );
 
 interface AddItemRequest {
@@ -47,62 +49,69 @@ interface AddItemRequest {
   quantity: number;
 }
 
-export const addItemToCart = createAsyncThunk<
-  CartItem,
-  { jwt: string | null; request: AddItemRequest }
->("cart/addItemToCart", async ({ jwt, request }, { rejectWithValue }) => {
-  try {
-    const response = await api.put(`${API_URL}/add`, request, {
-      headers: {
-        Authorization: `Bearer ${jwt}`,
-      },
-    });
+export const addItemToCart = createAsyncThunk<CartItem, AddItemRequest>(
+  "cart/addItemToCart",
+  async (request, { rejectWithValue }) => {
+    const jwt = localStorage.getItem("jwt");
+    if (!jwt) return rejectWithValue("Not authenticated");
+    try {
+      const response = await api.put(`${API_URL}/add`, request, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      });
 
-    console.log("Cart added ", response.data);
-    return response.data;
-  } catch (error: any) {
-    console.log("error ", error.response);
-    return rejectWithValue("Failed to add item to cart");
-  }
-});
+      console.log("Cart added ", response.data);
+      return response.data;
+    } catch (error: any) {
+      console.log("error ", error.response);
+      return rejectWithValue("Failed to add item to cart");
+    }
+  },
+);
 
-export const deleteCartItem = createAsyncThunk<
-  any,
-  { jwt: string; cartItemId: number }
->("cart/deleteCartItem", async ({ jwt, cartItemId }, { rejectWithValue }) => {
-  try {
-    const response = await api.delete(`${API_URL}/item/${cartItemId}`, {
-      headers: { Authorization: `Bearer ${jwt}` },
-    });
-    return response.data;
-  } catch (error: any) {
-    return rejectWithValue(
-      error.response.data.message || "Failed to delete cart item"
-    );
-  }
-});
+export const deleteCartItem = createAsyncThunk<any, number>(
+  "cart/deleteCartItem",
+  async (cartItemId, { rejectWithValue }) => {
+    const jwt = localStorage.getItem("jwt");
+    if (!jwt) return rejectWithValue("Not authenticated");
+
+    try {
+      const response = await api.delete(`${API_URL}/item/${cartItemId}`, {
+        headers: { Authorization: `Bearer ${jwt}` },
+      });
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response.data.message || "Failed to delete cart item",
+      );
+    }
+  },
+);
 
 export const updateCartItem = createAsyncThunk<
   any,
-  { jwt: string | null; cartItemId: number; cartItem: any }
+  { cartItemId: number; cartItem: any }
 >(
   "cart/updateCartItem",
-  async ({ jwt, cartItemId, cartItem }, { rejectWithValue }) => {
+  async ({ cartItemId, cartItem }, { rejectWithValue }) => {
+    const jwt = localStorage.getItem("jwt");
+    if (!jwt) return rejectWithValue("Not authenticated");
     try {
       const response = await api.put(
         `${API_URL}/item/${cartItemId}`,
         cartItem,
         {
           headers: { Authorization: `Bearer ${jwt}` },
-        }
+        },
       );
       return response.data;
     } catch (error: any) {
       return rejectWithValue(
-        error.response.data.message || "Failed to update cart item"
+        error.response.data.message || "Failed to update cart item",
       );
     }
-  }
+  },
 );
 
 const cartSlice = createSlice({
@@ -126,7 +135,7 @@ const cartSlice = createSlice({
         (state, action: PayloadAction<Cart>) => {
           state.cart = action.payload;
           state.loading = false;
-        }
+        },
       )
       .addCase(fetchUserCart.rejected, (state, action) => {
         state.loading = false;
@@ -143,7 +152,7 @@ const cartSlice = createSlice({
             state.cart.cartItems.push(action.payload);
           }
           state.loading = false;
-        }
+        },
       )
       .addCase(addItemToCart.rejected, (state, action) => {
         state.loading = false;
@@ -158,11 +167,11 @@ const cartSlice = createSlice({
       .addCase(deleteCartItem.fulfilled, (state, action) => {
         if (state.cart) {
           state.cart.cartItems = state.cart.cartItems.filter(
-            (item: CartItem) => item._id !== action.meta.arg.cartItemId
+            (item: CartItem) => item._id !== action.meta.arg
           );
           const mrpPrice = sumCartItemMrpPrice(state.cart?.cartItems || []);
           const sellingPrice = sumCartItemSellingPrice(
-            state.cart?.cartItems || []
+            state.cart?.cartItems || [],
           );
           state.cart.totalSellingPrice = sellingPrice;
           state.cart.totalMrpPrice = mrpPrice;
@@ -181,7 +190,7 @@ const cartSlice = createSlice({
       .addCase(updateCartItem.fulfilled, (state, action) => {
         if (state.cart) {
           const index = state.cart.cartItems.findIndex(
-            (item: CartItem) => item._id === action.meta.arg.cartItemId
+            (item: CartItem) => item._id === action.meta.arg.cartItemId,
           );
           if (index !== -1) {
             state.cart.cartItems[index] = {
@@ -191,7 +200,7 @@ const cartSlice = createSlice({
           }
           const mrpPrice = sumCartItemMrpPrice(state.cart?.cartItems || []);
           const sellingPrice = sumCartItemSellingPrice(
-            state.cart?.cartItems || []
+            state.cart?.cartItems || [],
           );
           state.cart.totalSellingPrice = sellingPrice;
           state.cart.totalMrpPrice = mrpPrice;

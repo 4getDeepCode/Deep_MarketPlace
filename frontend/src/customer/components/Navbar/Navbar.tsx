@@ -38,6 +38,8 @@ const Navbar = () => {
     setOpen(newOpen);
   };
 
+  const jwt = localStorage.getItem("jwt");
+
   const becomeSellerClick = () => {
     if (sellers.profile?._id) {
       navigate("/seller");
@@ -122,11 +124,21 @@ const Navbar = () => {
             </Button>
           )}
 
-          <IconButton onClick={() => navigate("/wishlist")}>
+          <IconButton
+            onClick={() => {
+              if (!jwt) navigate("/login");
+              else navigate("/wishlist");
+            }}
+          >
             <FavoriteBorder sx={{ fontSize: 29 }} className="text-gray-700" />
           </IconButton>
 
-          <IconButton onClick={() => navigate("/cart")}>
+          <IconButton
+            onClick={() => {
+              if (!jwt) navigate("/login");
+              else navigate("/cart");
+            }}
+          >
             <Badge badgeContent={cart.cart?.cartItems.length} color="primary">
               <AddShoppingCart
                 sx={{ fontSize: 29 }}
