@@ -12,14 +12,17 @@ const initialState: WishlistState = {
   error: null,
 };
 
-export const getWishlistByUserId = createAsyncThunk(
+export const getWishlistByUserId = createAsyncThunk<Wishlist>(
   "wishlist/getWishlistByUserId",
   async (_, { rejectWithValue }) => {
     const jwt = localStorage.getItem("jwt");
     if (!jwt) return rejectWithValue("Not authenticated");
+
     try {
       const response = await api.get(`/api/wishlist`, {
-        headers: { Authorization: `Bearer ${jwt}` },
+
+        headers: { Authorization: `Bearer ${jwt}` }
+
       });
       console.log("wishlist fetch ", response.data);
       return response.data;

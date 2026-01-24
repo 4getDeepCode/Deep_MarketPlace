@@ -62,8 +62,9 @@ const ProductDetails = () => {
   const handleAddCart = () => {
     dispatch(
       addItemToCart({
-        jwt: localStorage.getItem("jwt"),
-        request: { productId, size: "FREE", quantity },
+        productId,
+        size: "FREE",
+        quantity,
       }),
     );
   };

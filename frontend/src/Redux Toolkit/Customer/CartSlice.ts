@@ -23,7 +23,7 @@ const initialState: CartState = {
 // Define the base URL for the API
 const API_URL = "/api/cart";
 
-export const fetchUserCart = createAsyncThunk<Cart, string>(
+export const fetchUserCart = createAsyncThunk<Cart>(
   "cart/fetchUserCart",
   async (_, { rejectWithValue }) => {
     const jwt = localStorage.getItem("jwt");
@@ -44,7 +44,7 @@ export const fetchUserCart = createAsyncThunk<Cart, string>(
 );
 
 interface AddItemRequest {
-  productId: string | undefined;
+  productId: number;
   size: string;
   quantity: number;
 }
@@ -69,6 +69,8 @@ export const addItemToCart = createAsyncThunk<CartItem, AddItemRequest>(
     }
   },
 );
+
+
 
 export const deleteCartItem = createAsyncThunk<any, number>(
   "cart/deleteCartItem",
