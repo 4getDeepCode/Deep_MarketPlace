@@ -4,6 +4,7 @@ const AuthService = require("../services/AuthService");
 
 class AuthController {
   async sentLoginOtp(req, res) {
+    console.log("EMAIL:", req.body.email);
     try {
       const email = req.body.email;
       await AuthService.sendLoginOtp(email);
